@@ -1,0 +1,22 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click='dismiss()' aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h3 class="modal-title">User {{user.email}}</h3>
+	<h5>UID: {{user.uid}}</h3>
+	<button class='btn btn-primary btn-sm' ng-click='resetPassword(user.uid)'>Reset Password</button>
+</div>
+<div class="modal-body">
+	<h5>Conferences:</h5>
+	<table>
+		<tr ng-repeat="conference in allConferences">
+			<td>
+				<label>
+					<input ng-change='updateUserConference(conference)' ng-model='userConferences[conference.uid]' type="checkbox" />
+					{{conference.name}} ({{conference.uid}})
+				</label>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="modal-footer">
+	<button class='btn btn-primary' ng-click='dismiss()'>Done</button>
+</div>

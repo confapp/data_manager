@@ -1,0 +1,63 @@
+<div ng-controller='RootAdminController' class='container'>
+	<div class='header row'>
+		<div class='xs-sm-12 text-right'>
+			<a class='btn btn-link' ng-click="logout()">Log Out from {{user_email}}</a>
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col-md-6'>
+			<h2>Users</h2>
+			<table class='table striped'>
+				<tr>
+					<th>E-Mail</th>
+					<th colspan='2'>UID</th>
+				</tr>
+				<tr class='clickable_row' ng-repeat='user in users' ng-click='userModal(user)'>
+					<td>{{user.email}}</td>
+					<td colspan='2'>{{user.uid}}</td>
+				</tr>
+				<tr>
+					<form>
+						<td><input ng-model='new_email' type='text' placeholder='E-Mail Address' /></td>
+						<td><input ng-model='new_pass' type='password' placeholder='Password' /></td>
+						<td>
+							<button type='submit' class='btn btn-primary' ng-click='createUser(new_email, new_pass)'>Create User</a>
+						</td>
+					</form>
+				</tr>
+				<tr ng-if='create_user_error' class='error_row'>
+					<td colspan='3'>
+						{{create_user_error}}
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class='col-md-6'>
+			<h2>Conferences</h2>
+			<table class='table striped'>
+				<tr>
+					<th>Conference ID</th>
+					<th colspan='2'>Name</th>
+				</tr>
+				<tr class='clickable_row' ng-click='conferenceModal(conference, uid)' ng-repeat='(uid, conference) in conferences'>
+					<td>{{conference.uid}}</td>
+					<td colspan='2'>{{conference.name}}</td>
+				</tr>
+				<tr>
+					<form>
+						<td><input ng-model='new_conf_id' type='text' placeholder='Conference ID' /></td>
+						<td><input ng-model='new_conf_name' type='text' placeholder='Conference Name' /></td>
+						<td>
+							<button type='submit' class='btn btn-primary' ng-click='createConference(new_conf_id, new_conf_name)'>Create Conference</button>
+						</td>
+					</form>
+				</tr>
+				<tr ng-if='create_conference_error' class='error_row'>
+					<td colspan='3'>
+						{{create_conference_error}}
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
