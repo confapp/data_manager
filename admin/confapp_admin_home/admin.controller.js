@@ -4,7 +4,10 @@ HomeController.$inject = ['$q', '$http', '$scope', '$location', '$rootScope', 'A
 function HomeController($q, $http, $scope, $location, $rootScope, AuthenticationService, $firebaseObject, $firebaseArray, Upload, DatabaseCreator) {
 	var conferenceID = $location.search().conference;
 	var conferenceRef = ref.child('conferences').child(conferenceID);
-	$scope.user_email = AuthenticationService.getUserInformation().email;
+	var userInformation = AuthenticationService.getUserInformation();
+	if(userInformation) {
+		$scope.user_email = userInformation.email;
+	}
 
 	$scope.conference = $firebaseObject(conferenceRef);
 	$scope.conference.$bindTo($scope, 'conference');
@@ -505,5 +508,4 @@ function HomeController($q, $http, $scope, $location, $rootScope, Authentication
 			$scope.currentlyGenerating = false;
 		});
 	};
-	$scope.generateDatabase();
 }

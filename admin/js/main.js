@@ -25,12 +25,16 @@ function run($rootScope, $location, AuthenticationService, editableOptions) {
 
 		if(restrictedPage) {
 			AuthenticationService.isLoggedIn().then(function(userInfo) {
-				var conference = $location.search().conference;
+				if(userInfo) {
+					var conference = $location.search().conference;
 
-				if(conference) {
-					$location.path('/');
+					if(conference) {
+						$location.path('/');
+					} else {
+						$location.path('/choose_conference');
+					}
 				} else {
-					$location.path('/choose_conference');
+					$location.path('/login');
 				}
 			}, function(err) {
 				$location.path('/login');
@@ -42,7 +46,3 @@ function run($rootScope, $location, AuthenticationService, editableOptions) {
 var app = angular.module('app', ['ngRoute', 'ngCookies', 'xeditable', 'firebase', 'ui.bootstrap', 'ngFileUpload', 'angularMoment'])
 					.config(config)
 					.run(run);
-
-var ref = new Firebase('https://confapp-data-sync.firebaseio.com'),
-	tz_api_key = "AIzaSyCh4eAVGTJRsv-dDKatS2acYi-P1N8tjpU",
-	geocode_api_key = "AIzaSyCDbBLHTSIKqafSpdM-tp_cUYEPtyJ68kM";
