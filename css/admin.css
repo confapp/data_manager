@@ -92,3 +92,8 @@ table#conf_info tbody tr td {
 .conf_select:hover {
 	background-color: #FAFAFA;
 }
+.footer {
+	text-align: right;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
