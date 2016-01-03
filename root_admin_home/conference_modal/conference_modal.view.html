@@ -2,12 +2,12 @@
 	<button type="button" class="close" ng-click='dismiss()' aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	<h3 class="modal-title">Conference {{conference.name}}</h3>
 	<div class='row'>
-		<div class='col-sm-6'>
+		<div class='col-sm-8'>
 			<h5>ID: {{conference.uid}}</h3>
+			<a ng-click='downloadConferenceDatabase(conference)' target='_blank' class='btn btn-xs btn-default'>Download SQLite3 Database (version {{conference.currentDatabaseVersion}} from <span am-time-ago="conference.currentDatabaseUpdated*1000"></span>)</a>
 		</div>
-		<div class='col-sm-6 text-right' style='margin-top: 10px'>
+		<div class='col-sm-4 text-right' style='margin-top: 10px'>
 			<button style='margin-right: 5px;' class='btn btn-xs btn-danger' ng-click='requestDeleteConference(conference.uid)'>Delete Conference</button>
-			<a ng-href='{{getConferenceURL(conference)}}' target='_blank' class='btn btn-xs btn-default'>Administer</a>
 		</div>
 	</div>
 </div>

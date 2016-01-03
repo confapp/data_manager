@@ -5,8 +5,32 @@ app.factory('DatabaseCreator', DatabaseCreator);
 DatabaseCreator.$inject=['$q', 'CreateTables', 'DataTypes', 'CSVReader', 'WarningList', 'SQLtoJSON'];
 function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, WarningList, SQLtoJSON) {
 	var service = {
-		createDatabase: createDatabase
+		createDatabase: createDatabase,
+		createDatabaseFromJSON: createDatabaseFromJSON
 	};
+
+	function createDatabaseFromJSON(jsonData) {
+		var db = new SQL.Database();
+		return CreateTables.initializeDatabase(db).then(function(db) {
+			_.each(jsonData, function(data, tableName) {
+				var headers = data.headers;
+				var joinedHeaders = headers.join(', ')
+				var valueStatement = _.map(headers, function(headerName) {
+					return '$'+headerName;
+				}).join(', ');
+				var stmt = db.prepare('INSERT INTO ' + tableName + ' (' + joinedHeaders + ') VALUES (' + valueStatement + ')');
+				_.each(data.rows, function(row) {
+					var obj = {};
+					_.each(row, function(item, index) {
+						obj['$'+headers[index]] = item;
+					});
+					stmt.run(obj);
+				});
+				stmt.free();
+			});
+			return db;
+		});
+	}
 
 	function createDatabase(sourceData) {
 		var db = new SQL.Database(),
