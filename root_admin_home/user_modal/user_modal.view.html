@@ -1,0 +1,24 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click='dismiss()' aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h3 class="modal-title">{{user.email}}</h3>
+	<div class='row'>
+		<div class='col-sm-8'>
+			<h5>UID: {{user.uid}}</h3>
+		</div>
+		<div class='col-sm-4 text-right' style='margin-top: 10px;'>
+			<button class='btn btn-default btn-xs' ng-click='resetPassword(user.uid)'>Reset Password</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body">
+	<h5>Can Administrate Conferences:</h5>
+	<div class='checkbox' ng-repeat="conference in allConferences">
+		<label>
+			<input ng-change='updateUserConference(conference)' ng-model='userConferences[conference.uid]' type="checkbox" />
+			{{conference.name}} ({{conference.uid}})
+		</label>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class='btn btn-primary' ng-click='dismiss()'>Done</button>
+</div>

@@ -1,0 +1,458 @@
+<div class='row'>
+	<div class="col-md-6">
+		<h2>Conference Information<a href='javascript:void(0)' class='toggle_help' ng-click='conferenceInfoHelp = !conferenceInfoHelp'>[{{conferenceInfoHelp ? '-' : '?'}}]</a></h2>
+		<p class="description" ng-if='conferenceInfoHelp'>
+		Basic information about the conference. The conference location is used to determine its time zone so be sure to set it.
+		</p>
+		<table id='conf_info'>
+			<tbody>
+				<tr>
+					<td>
+			            <label>Name:</label>
+					</td>
+					<td>
+						<a id='conference_name' href="javascript:void(0)" editable-text="conference.name">{{ conference.name || 'e.g. CHI 2016' }}</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+			            <label for='conference_description'>Description: </label>
+					</td>
+					<td>
+						<a href="javascript:void(0)" editable-text="conference.description">{{ conference.description || 'e.g. The ACM Conference on Human Factors in Computing Systems' }}</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+			            <label for='conference_location'>Location: </label>
+					</td>
+					<td>
+						<a href="javascript:void(0)" editable-text="conference.location">{{ conference.location || 'e.g. Ann Arbor, MI' }}</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+			            <label for='conference_tz'>Time Zone: </label>
+					</td>
+					<td>
+						<span ng-if='conference.timeZone' class='conference_tz'>{{conference.timeZone}}</span>
+					</td>
+				</tr>
+				<tr ng-if='timeZoneError'>
+					<td class='error conference_tz' colspan='2'>
+						{{timeZoneError}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-md-6">
+		<h2>Icons<a href='javascript:void(0)' class='toggle_help' ng-click='iconsHelp = !iconsHelp'>[{{iconsHelp ? '-' : '?'}}]</a></h2>
+		<p class="description" ng-if='iconsHelp'>
+		These icons will be used as the app icons.
+		</p>
+		<table class='table table-bordered table-striped' id="icons" class='table'>
+			<thead>
+				<tr>
+					<th>Type</th>
+					<th>Icon</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Primary Icon</td>
+					<td>
+						<img style='max-width: 100%; max-height: 200px;' ng-src='{{conference.primaryIcon.uri}}' />
+						<div class="btn btn-primary btn-block" ngf-select="uploadIcon($files)">
+							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+							Icon
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class='row'>
+	<div class="col-lg-6">
+		<h2>Source Data<a href='javascript:void(0)' class='toggle_help' ng-click='sourceDataHelp = !sourceDataHelp'>[{{sourceDataHelp ? '-' : '?'}}]</a></h2>
+		<p class="description" ng-if='sourceDataHelp'>
+			Can be CSV, Excel, or JSON files. You can download sample files at <a href='http://conf-app.com/sample_data.zip'>http://conf-app.com/sample_data.zip</a>
+		</p>
+		<table class='table table-bordered table-striped' id="uploadedFiles">
+			<thead>
+				<tr>
+					<th>Filename</th>
+					<th>Updated</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat='(key, dataFile) in dataFiles'>
+					<td>
+						<a ng-href='{{dataFile.uri}}' target='_blank'>{{dataFile.name}}</a>
+					</td>
+					<td>
+						<span am-time-ago="dataFile.updated"></span>
+					</td>
+					<td>
+						<a class='btn btn-xs btn-danger' href='javascript:void(0)' ng-click='removeDataFile(dataFile, key)'>
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+							Delete
+						</a>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td id = "dataUpload" colspan="2">
+						<div class="btn btn-primary btn-block" ngf-multiple="true" ngf-select="uploadData($files)">
+							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+							CSV
+						</div>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+
+	<div class="col-lg-6">
+		<h2>Annotations<a href='javascript:void(0)' class='toggle_help' ng-click='annotationsHelp = !annotationsHelp'>[{{annotationsHelp ? '-' : '?'}}]</a></h2>
+		<p class="description" ng-if='annotationsHelp'>
+			These annotations are extra data that can be attached to a paper, such as best paper awards. The identifier is what appears in the "annotations" column for papers. For example, a best paper award might have identifier="best", type="award", description="Best Paper", and the icon for a best paper award.
+		</p>
+		<table class='table table-bordered table-striped' id="annotations">
+			<thead>
+				<tr>
+					<th>Identifier (in source data)</th>
+					<th>Type</th>
+					<th>Description</th>
+					<th>Icon</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat='(key, annotationType) in annotationTypes'>
+					<td>
+						<a href="javascript:void(0)" editable-text="annotationType.id">{{ annotationType.id || 'ID' }}</a>
+					</td>
+					<td>
+						<a href="javascript:void(0)" editable-text="annotationType.type">{{ annotationType.type || 'Type' }}</a>
+					</td>
+					<td>
+						<a href="javascript:void(0)" editable-text="annotationType.description">{{ annotationType.description || 'Description' }}</a>
+					</td>
+					<td style='text-align: center'>
+						<img style='max-width: 100%; max-height: 200px;' ng-if='annotationType.icon' ng-src='{{annotationType.icon.uri}}' />
+						<div class="btn btn-xs btn-default btn-block" ngf-select="changeAnnotationImage($files, annotationType, key)">
+							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+							Icon
+						</div>
+					</td>
+					<td>
+						<a class='btn btn-xs btn-danger' href='javascript:void(0)' ng-click='removeAnnotationType(annotationType, key)'>
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+							Delete
+						</a>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr class='form-group' name='new_annotation' ng-form>
+					<td><input class='form-control' ng-model='new_annotation.id' type='text' placeholder='ID' required/></td>
+					<td><input class='form-control' ng-model='new_annotation.type' type='text' placeholder='Type' required/></td>
+					<td><input class='form-control' ng-model='new_annotation.description' type='text' placeholder='Description' required/></td>
+					<td>
+						<img style='max-width: 100%; max-height: 200px;' ng-if='new_annotation.icon' ng-src='{{new_annotation.icon.uri}}' />
+						<div class="btn btn-default btn-block" ngf-select="changeNewAnnotationImage($files)">
+							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+							Icon
+						</div>
+					</td>
+					<td>
+						<button ng-disabled='new_annotation.$invalid' type='submit' class='btn btn-primary btn-block' ng-click='addAnnotationType(new_annotation.id, new_annotation.type, new_annotation.description, new_annotation.icon)'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
+
+<div class='row' id='types'>
+	<div class="col-lg-6">
+		<h2>Session Types<a href='javascript:void(0)' class='toggle_help' ng-click='sessionTypesHelp = !sessionTypesHelp'>[{{sessionTypesHelp ? '-' : '?'}}]</a></h2>
+		<p class="description" ng-if='sessionTypesHelp'>
+			Session types contain information about different types of sessions. "Demonym" means the word to call something that belongs to that session. For example, for a "papers" session, the event demonym will be "Papers" and the person demonym will be "Chair". For a course, the event demonym might be "Class" (or blank) and the person demonym will be "Instructor".
+		</p>
+		<!--<form role='form' name='new_session' >-->
+		<table class='table table-bordered table-striped' id="session_types">
+			<thead>
+				<tr>
+					<th>Name (in source data)</th>
+					<th>Event Demonym</th>
+					<th>Person Demonym</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat='(key, sessionType) in sessionTypes'>
+					<td>
+						<a href="javascript:void(0)" editable-text="sessionType.name">{{ sessionType.name || 'Name' }}</a>
+					</td>
+					<td>
+						<a href="javascript:void(0)" editable-text="sessionType.eventDemonym">{{ sessionType.eventDemonym || '(event demonym)' }}</a>
+					</td>
+					<td>
+						<a href="javascript:void(0)" editable-text="sessionType.personDemonym">{{ sessionType.personDemonym || '(person demonym)' }}</a>
+					</td>
+					<td>
+						<a class='btn btn-xs btn-danger' href='javascript:void(0)' ng-click='removeSessionType(sessionType, key)'>
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+							Delete
+						</a>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr class='form-group' name='new_session' ng-form>
+					<td><input class='form-control' ng-model='new_session.name' type='text' placeholder='Name' required /></td>
+					<td><input class='form-control' ng-model='new_session.event_demonym' type='text' placeholder='Event Demonym' required /></td>
+					<td><input class='form-control' ng-model='new_session.person_demonym' type='text' placeholder='Person Demonym' required /></td>
+					<td class="form-actions">
+						<button ng-click='addSessionType(new_session.name, new_session.event_demonym, new_session.person_demonym)' ng-disabled="new_session.$invalid" type='submit' class='btn btn-primary btn-block'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	<!--</form>-->
+	</div>
+	<div class="col-lg-6">
+		<h2>Presentation Types<a href='javascript:void(0)' class='toggle_help' ng-click='presentationTypesHelp = !presentationTypesHelp'>[{{presentationTypesHelp ? '-' : '?'}}]</a></h2>
+		<p class="description" ng-if='presentationTypesHelp'>
+			Similar to the session types, but also contain a duration for different types of presentations. For example, notes might have a shorter duration than papers.
+		</p>
+		<table class='table table-bordered table-striped' id="presentation_types">
+			<thead>
+				<tr>
+					<th>Name (in source data)</th>
+					<th>Person Demonym</th>
+					<th>Presentation Duration<br />(in minutes, blank for<br/>full session)</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat='(key, presentationType) in presentationTypes'>
+					<td>
+						<a href="javascript:void(0)" editable-text="presentationType.name">{{ presentationType.name || 'Name' }}</a>
+					</td>
+					<td>
+						<a href="javascript:void(0)" editable-text="presentationType.personDemonym">{{ presentationType.personDemonym || '(person demonym)' }}</a>
+					</td>
+					<td>
+						<a href="javascript:void(0)" editable-text="presentationType.duration">{{ presentationType.duration || '(full session)' }}</a>
+					</td>
+					<td>
+						<a class='btn btn-xs btn-danger' href='javascript:void(0)' ng-click='removePresentationType(presentationType, key)'>
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+							Delete
+						</a>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr ng-form name='new_presentation_type'>
+					<td><input class='form-control' ng-model='new_presentation_type.name' type='text' placeholder='Name' required/></td>
+					<td><input class='form-control' ng-model='new_presentation_type.person_demonym' type='text' placeholder='Person Demonym' required/></td>
+					<td><input class='form-control' ng-model='new_presentation_type.duration' type='text' placeholder='Duration'/></td>
+					<td>
+						<button ng-disabled='new_presentation_type.$invalid' type='submit' class='btn btn-primary btn-block' ng-click='addPresentationType(new_presentation_type.name, new_presentation_type.duration, new_presentation_type.person_demonym)'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
+
+<div class='row' id='locations'>
+	<div class="col-sm-6">
+		<h2>Maps<a href='javascript:void(0)' class='toggle_help' ng-click='mapsHelp = !mapsHelp'>[{{mapsHelp ? '-' : '?'}}]</a></h2>
+		<p class="description" ng-if='mapsHelp'>
+			The layout of the conference venue; can be any number of images (for example, one image per floor).
+		</p>
+		<div class='table table-bordered table-striped' id='uploadedMaps'>
+			<div ng-repeat='(key, map) in maps'>
+				<div class='row'>
+					<div class = 'col-sm-5'>
+						<label>ID:</label>
+						<a href="javascript:void(0)" editable-text="map.id">{{ map.id || 'Map ID' }}</a>
+					</div>
+					<div class = 'col-sm-5'>
+						<label>Display Name:</label>
+						<a href="javascript:void(0)" editable-text="map.name">{{ map.name || 'Map Name' }}</a>
+					</div>
+					<div class = 'col-sm-2'>
+						<a class='btn btn-xs btn-danger' href='javascript:void(0)' ng-click='removeMap(map, key)'>
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+							Delete
+						</a>
+					</div>
+				</div>
+				<div class='row' style='margin-bottom: 10px;'>
+					<div class = 'col-sm-12' style='position: relative;'>
+						<span ng-class='getMapMarkerClasses(location, locationKey)' style='position: absolute;' class='locationMarker' ng-repeat='(locationKey, location) in mapLocations[key]' data-pctX='{{location.pctX}}' data-pctY='{{location.pctY}}' ng-mouseenter='mouseEnterLocation(location, locationKey)' ng-mouseleave='mouseLeaveLocation(location, locationKey)'></span>
+						<img ng-class='getMapClasses()' style='max-width: 100%; max-height: 400px;' ng-click='onClickMap(map, key, $event)' ng-if='map.image' ng-src='{{map.image.uri}}' />
+						<div class="btn btn-xs btn-default btn-block" ngf-select="changeMapImage($files, map, key)">
+							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+							Map
+						</div>
+					</div>
+				</div>
+				<hr />
+			</div>
+			<form class='row' name='new_map'>
+				<div class = 'col-sm-3'>
+					<input class='form-control' ng-model='new_map.id' type='text' placeholder='ID' required/>
+				</div>
+				<div class = 'col-sm-3'>
+					<input class='form-control' ng-model='new_map.name' type='text' placeholder='Display Name' required/>
+				</div>
+				<div class = 'col-sm-3'>
+					<img style='max-width: 100%; max-height: 200px;' ng-if='new_map.image' ng-src='{{new_map.image.uri}}' />
+					<div class="btn btn-default btn-block" ngf-select="changeNewMapImage($files)">
+						<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+						Map
+					</div>
+				</div>
+				<div class = 'col-sm-3'>
+					<button ng-disabled='new_map.$invalid' type='submit' class='btn btn-primary btn-block' ng-click='addMap(new_map.id, new_map.name, new_map.image)'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<h2>Locations<a href='javascript:void(0)' class='toggle_help' ng-click='locationsHelp = !locationsHelp'>[{{locationsHelp ? '-' : '?'}}]</a></h2>
+		<p class="description" ng-if='locationsHelp'>
+			The rooms that presentations might be in. To move a room, press "move" and then click on one of the maps.
+		</p>
+		<table class='table table-bordered table-striped' id="mapLocations">
+			<thead>
+				<tr>
+					<th>Identifier (in source data)</th>
+					<th>Display Name</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-class='getLocationRowClasses(location, key)' ng-mouseenter='mouseEnterLocation(location, key)' ng-mouseleave='mouseLeaveLocation(location, key)' ng-repeat='(key, location) in locations'>
+					<td>
+						<a href="javascript:void(0)" editable-text="location.id">{{ location.id || 'ID' }}</a>
+					</td>
+					<td>
+						<a href="javascript:void(0)" editable-text="location.name">{{ location.name || 'Display Name' }}</a>
+					</td>
+					<td>
+						<a class='btn btn-xs btn-default' href='javascript:void(0)' ng-click='moveLocation(location, key)'>
+							Move
+						</a>
+						<a class='btn btn-xs btn-danger' href='javascript:void(0)' ng-click='removeLocation(location, key)'>
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+							Delete
+						</a>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr ng-form name='new_location'>
+					<form>
+						<td><input class='form-control' ng-model='new_location.id' type='text' placeholder='ID' required /></td>
+						<td><input class='form-control' ng-model='new_location.name' type='text' placeholder='Display Name' required /></td>
+						<td>
+							<button ng-disabled='new_location.$invalid' type='submit' class='btn btn-primary btn-block' ng-click='addLocation(new_location.id, new_location.name)'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+						</td>
+					</form>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
+
+<div class='row'>
+	<div class="col-sm-6">
+		<h2>Program Options<a href='javascript:void(0)' class='toggle_help' ng-click='optionsHelp = !optionsHelp'>[{{optionsHelp ? '-' : '?'}}]</a></h2>
+		<p class="description" ng-if='optionsHelp'>
+			Program guide options (if in doubt, leave these all at the defaults)
+		</p>
+		<div class='row'>
+			<div class='col-xs-4'>
+				<label>
+					<input ng-model='conference.hasSchedule' type="checkbox" />
+					Conference Schedule
+				</label>
+			</div>
+			<div class='col-xs-4'>
+				<label>
+					<input ng-model='conference.hasNotes' type="checkbox" />
+					User Notes
+				</label>
+			</div>
+			<div class='col-xs-4'>
+				<label>
+					<input ng-model='conference.hasReadingList' type="checkbox" />
+					Reading Lists
+				</label>
+			</div>
+		</div>
+		<div class='row'>
+			<div class='col-xs-4'>
+				<label>
+					<input ng-model='conference.hasDataSync' type="checkbox" />
+					Data Sync
+				</label>
+			</div>
+			<div class='col-xs-4'>
+				<label>
+					<input ng-model='conference.hasVoting' type="checkbox" />
+					Best Talk Voting
+				</label>
+			</div>
+			<div class='col-xs-4'>
+				<a class='btn btn-xs btn-default' href='javascript:void(0)' ng-click='restoreProgramOptionDefaults()'>Restore Defaults</a>
+			</div>
+		</div>
+		<hr />
+		<div class='row'>
+			<div class='col-sm-12'>
+				<label>
+		            Web Program Base URL:
+					<a href="javascript:void(0)" editable-text="conference.webBaseURL">{{ conference.webBaseURL || 'The URL where the Web program will be stored.' }}</a>
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<div class='error text-danger bg-danger' ng-if='error'>
+			<h4>Source Data Error:</h4>
+			{{error.message}}
+		</div>
+		<div class='warnings text-warning bg-warning' ng-if='warnings.length>0'>
+			<h4>Source Data Warnings:</h4>
+			<div ng-repeat='warning in warnings'>
+				<span ng-if='warning.filename'><strong>{{warning.filename}}</strong><span ng-if='warning.row'>, row {{warning.row}}</span>: </span>
+				{{warning.message}}
+			</div>
+		</div>
+		<a target='_blank' class='btn btn-block btn-link' href='{{conference.webBaseURL}}'>
+			current program
+			<br />
+			(version {{conference.currentDatabaseVersion}},
+			published <span am-time-ago="conference.currentDatabaseUpdated*1000"></span>)
+		</a>
+		<button class='btn btn-xl btn-success btn-block' ng-disabled='currentlyGenerating' ng-click='generateDatabase()'>
+			<h2>Publish Database</h2>
+			<p>with the current source data</p>
+		</button>
+		<div ng-repeat='message in generatingInterimMessages'>
+			{{message}}
+		</div>
+</div>

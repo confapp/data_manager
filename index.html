@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html ng-app='app'>
+	<head>
+		<link rel='stylesheet' href='vendor/bootstrap-3.3.4-dist/css/bootstrap.min.css'>
+		<link rel='stylesheet' href='vendor/bootstrap-3.3.4-dist/css/bootstrap-theme.min.css'>
+		<link rel='stylesheet' href='vendor/angular-xeditable/css/xeditable.css'>
+		<link rel="stylesheet" href="css/admin.css">
+
+		<script type='text/javascript' src='vendor/jquery-2.1.4.min.js'></script>
+		<script type='text/javascript' src='vendor/jquery-ui-1.11.4.custom/jquery-ui.min.js'></script>
+		<script type='text/javascript' src='vendor/bootstrap-3.3.4-dist/js/bootstrap.min.js'></script>
+		<script type='text/javascript' src='vendor/firebase.js'></script>
+		<script type='text/javascript' src='vendor/angular-1.4.8/angular.js'></script>
+		<script type='text/javascript' src='vendor/angular-1.4.8/angular-route.js'></script>
+		<script type='text/javascript' src='vendor/angular-1.4.8/angular-cookies.js'></script>
+		<script type='text/javascript' src='vendor/moment.min.js'></script>
+		<script type='text/javascript' src='vendor/moment-timezone-with-data.min.js'></script>
+		<script type='text/javascript' src='vendor/bluebird.min.js'></script>
+		<script type='text/javascript' src='vendor/underscore-min.js'></script>
+
+		<script type='text/javascript' src='vendor/angular-moment.min.js'></script>
+		<script type='text/javascript' src='vendor/angularfire.min.js'></script>
+		<script type='text/javascript' src='vendor/ui-bootstrap-tpls-0.14.3.min.js'></script>
+		<script type='text/javascript' src='vendor/ng-file-upload-bower-11.0.0/ng-file-upload-shim.min.js'></script>
+		<script type='text/javascript' src='vendor/ng-file-upload-bower-11.0.0/ng-file-upload.min.js'></script>
+		<script type='text/javascript' src='vendor/angular-xeditable/js/xeditable.min.js'></script>
+		<script type='text/javascript' src='vendor/sql.js'></script>
+		<script type='text/javascript' src='vendor/PapaParse-4.1.2/papaparse.min.js'></script>
+
+		<script type='text/javascript' src='main.js'></script>
+
+		<script type='text/javascript' src='services/api_services.js'></script>
+		<script type='text/javascript' src='services/auth.js'></script>
+		<script type='text/javascript' src='services/manageUsers.js'></script>
+		<script type='text/javascript' src='services/uploads.js'></script>
+
+		<script type='text/javascript' src='admin/admin.controller.js'></script>
+		<script type='text/javascript' src='login/login.controller.js'></script>
+		<script type='text/javascript' src='conference_admin/conference_admin.controller.js'></script>
+		<script type='text/javascript' src='root_admin_home/root_admin_home.controller.js'></script>
+		<script type='text/javascript' src='root_admin_home/conference_modal/conference_modal.controller.js'></script>
+		<script type='text/javascript' src='root_admin_home/user_modal/user_modal.controller.js'></script>
+		<script type='text/javascript' src='choose_conference/choose_conference.controller.js'></script>
+		<script type='text/javascript' src='manage_account/manage_account.controller.js'></script>
+
+		<script type='text/javascript' src='db_creator/db_creator_interface.js'></script>
+		<script type='text/javascript' src='db_creator/create_tables.js'></script>
+		<script type='text/javascript' src='db_creator/data_types.js'></script>
+		<script type='text/javascript' src='db_creator/warnings.js'></script>
+		<script type='text/javascript' src='db_creator/sqlite_to_json.js'></script>
+		<script type='text/javascript' src='db_creator/spreadsheet/csv_headers.js'></script>
+		<script type='text/javascript' src='db_creator/spreadsheet/determine_csv_type.js'></script>
+		<script type='text/javascript' src='db_creator/spreadsheet/read_csv.js'></script>
+		<script type='text/javascript' src='db_creator/spreadsheet/csv_papers_reader.js'></script>
+		<script type='text/javascript' src='db_creator/spreadsheet/csv_sessions_reader.js'></script>
+		<script type='text/javascript' src='db_creator/spreadsheet/csv_attachments_reader.js'></script>
+
+		<title>ConfApp Admin</title>
+	</head>
+
+	<body>
+		<div class='container' ng-controller='AdminController'>
+			<div ng-show='user_email' class='header row' style='border-bottom: 1px solid #EEE;margin-bottom: 10px;padding-bottom: 10px;'>
+				<div class='xs-sm-12 text-right'>
+					<strong>{{user_email}}</strong> |
+					<span ng-if='isRootUser'><a ng-click='manageAllAccounts()' href='javascript:void(0);'>Users &amp; Conferences</a> | </span>
+					<a ng-click='manageAccount()' href='javascript:void(0);'>Account Settings</a> |
+					<a ng-click='chooseConference()' href='javascript:void(0);'>My Conferences</a> |
+					<a ng-click='logout()' href='javascript:void(0);'>Log out</a>
+				</div>
+			</div>
+			<div ng-view></div>
+		</div>
+	</body>
+</html>

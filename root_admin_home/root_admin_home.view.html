@@ -1,0 +1,66 @@
+<div ng-controller='RootAdminController' class='container'>
+	<div class='row'>
+		<div class='col-md-6'>
+			<h2>Users</h2>
+			<table class='table table-hover table-bordered table-striped'>
+				<thead>
+					<tr>
+						<th>E-Mail</th>
+						<th colspan='2'>UID</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class='clickable_row' ng-repeat='user in users' ng-click='userModal(user)'>
+						<td>{{user.email}}</td>
+						<td colspan='2'>{{user.uid}}</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr ng-form name='new_user'>
+						<td><input class='form-control' ng-model='new_user.email' type='text' placeholder='E-Mail Address' required/></td>
+						<td><input class='form-control' ng-model='new_user.pass' type='password' placeholder='Password' required/></td>
+						<td>
+							<button ng-disabled='new_user.$invalid' type='submit' class='btn btn-default btn-block' ng-click='createUser(new_user.email, new_user.pass)'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Create User</a>
+						</td>
+					</tr>
+					<tr ng-if='create_user_error' class='error_row danger'>
+						<td colspan='3'>
+							{{create_user_error}}
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		<div class='col-md-6'>
+			<h2>Conferences</h2>
+			<table class='table table-hover table-bordered table-striped'>
+				<thead>
+					<tr>
+						<th>Conference ID</th>
+						<th colspan='2'>Name</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class='clickable_row' ng-click='conferenceModal(conference, uid)' ng-repeat='(uid, conference) in conferences'>
+						<td>{{conference.uid}}</td>
+						<td colspan='2'>{{conference.name}}</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr ng-form name='new_conf'>
+						<td><input class='form-control' ng-model='new_conf.id' type='text' placeholder='Conference ID' required/></td>
+						<td><input class='form-control' ng-model='new_conf.name' type='text' placeholder='Conference Name' required/></td>
+						<td>
+							<button ng-disabled='new_conf.$invalid' type='submit' class='btn btn-default btn-block' ng-click='createConference(new_conf.id, new_conf.name)'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Create Conference</button>
+						</td>
+					</tr>
+					<tr ng-if='create_conference_error' class='error_row danger'>
+						<td colspan='3'>
+							{{create_conference_error}}
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,22 @@
+<div class='row'>
+	<div class="col-sm-12">
+		<h2>My Conferences</h2>
+	</div>
+</div>
+<div class='conf_select row' ng-repeat='(key, conference) in myConferences' ng-click='openConference(conference, key)' class="clickable_row row">
+	<div class='col-sm-10'>
+		<h3>
+			{{conference.name || key}}
+		</h3>
+		<p>{{conference.description}}</p>
+		<p>{{conference.location}}</p>
+	</div>
+	<div class='col-sm-2'>
+		<img ng-src='{{conference.primaryIcon.uri}}' />
+	</div>
+</div>
+<div class='warning row' ng-show="angular.equals({}, !myConferences)">
+	<div class='col-sm-12'>
+		No conferences available for this account. Please contact <a href='mailto:swloney@gmail.com'>swloney@gmail.com</a> if this is not expected.
+	</div>
+</div>

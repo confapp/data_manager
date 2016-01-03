@@ -1,0 +1,25 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click='dismiss()' aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h3 class="modal-title">Conference {{conference.name}}</h3>
+	<div class='row'>
+		<div class='col-sm-6'>
+			<h5>ID: {{conference.uid}}</h3>
+		</div>
+		<div class='col-sm-6 text-right' style='margin-top: 10px'>
+			<button style='margin-right: 5px;' class='btn btn-xs btn-danger' ng-click='requestDeleteConference(conference.uid)'>Delete Conference</button>
+			<a ng-href='{{getConferenceURL(conference)}}' target='_blank' class='btn btn-xs btn-default'>Administer</a>
+		</div>
+	</div>
+</div>
+<div class="modal-body">
+	<h5>Administrators:</h5>
+	<div class='checkbox' ng-repeat="user in allUsers">
+		<label>
+			<input ng-change='updateConferenceUser(user)' ng-model='adminUsers[user.uid]' type="checkbox" />
+			{{user.email}}
+		</label>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class='btn btn-primary' ng-click='dismiss()'>Done</button>
+</div>

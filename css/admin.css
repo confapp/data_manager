@@ -1,0 +1,94 @@
+.placeholder {
+	color: #AAA;
+}
+.feedback {
+	font-size: 0.8em;
+	color: #BBB;
+}
+.feedback.success {
+	color: #696;
+}
+.feedback.error {
+	color: #966;
+}
+.remove {
+	color: #900;
+}
+
+table#conf_info tbody tr td {
+	padding: 2px;
+}
+
+.toggle_help {
+	font-weight: 100;
+	float: right;
+	font-size: 0.8em;
+	padding-top: 6px;
+}
+.toggle_help, .toggle_help:hover, .toggle_help:active {
+	text-decoration: none;
+}
+
+.warnings, .error {
+	margin-bottom: 10px;
+	padding: 5px;
+	color: #333;
+}
+
+.clickable_row {
+	cursor: pointer;
+}
+
+.roomMarker {
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
+
+.dropTarget {
+	background-color: #F8F8F8;
+	color: #777;
+	cursor: pointer;
+	padding: 10px;
+	border: 1px solid #777;
+}
+
+.description {
+	font-size: 0.9em;
+	text-align: justify;
+	color: #AAA;
+	border-bottom: 1px solid #EEE;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.highlighted, .table-striped>tbody>tr:nth-of-type(odd).highlighted {
+	background-color: #fcf8e3;
+}
+
+.locationMarker {
+	border-style: solid;
+	border-color: #666;
+}
+.locationMarker.highlighted {
+	background-color: #fcf8e3;
+	border-color: #fcf8e3;
+}
+.locationMarker.waitingForMapClick {
+	border-color: royalblue;
+}
+.locationMarker.ignoreClicks {
+	pointer-events: none;
+}
+
+.waitingForMapClick {
+	border: 2px solid royalblue;
+}
+.conf_select {
+	cursor: pointer;
+	border: 1px solid #EEE;
+}
+.conf_select:hover {
+	background-color: #FAFAFA;
+}
