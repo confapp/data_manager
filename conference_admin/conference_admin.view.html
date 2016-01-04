@@ -90,7 +90,7 @@
 			<tbody>
 				<tr ng-repeat='(key, dataFile) in dataFiles'>
 					<td>
-						<a ng-href='{{dataFile.uri}}' target='_blank'>{{dataFile.name}}</a>
+						<a ng-href='{{dataFile.uri.uri}}' target='_blank'>{{dataFile.name}}</a>
 					</td>
 					<td>
 						<span am-time-ago="dataFile.updated"></span>
