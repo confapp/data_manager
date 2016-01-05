@@ -1,8 +1,8 @@
 app.controller('ConferenceModalController', ConferenceModalController);
 
-ConferenceModalController.$inject = ['$scope',  '$firebaseArray', '$q', 'conference', 'conference_uid', 'UserManagementService', '$uibModalInstance', '$firebaseObject', 'APIServices', 'DatabaseCreator'];
+ConferenceModalController.$inject = ['$scope',  '$firebaseArray', '$q', 'conference', 'conference_uid', 'UserManagementService', '$uibModalInstance', '$firebaseObject', 'APIServices', 'DownloadService'];
 
-function ConferenceModalController($scope, $firebaseArray, $q, conference, conference_uid, UserManagementService, $uibModalInstance, $firebaseObject, APIServices, DatabaseCreator) {
+function ConferenceModalController($scope, $firebaseArray, $q, conference, conference_uid, UserManagementService, $uibModalInstance, $firebaseObject, APIServices, DownloadService) {
 	var ref = APIServices.getFirebaseRef(),
 		conferencesRef = APIServices.getConferencesRef();
 
@@ -62,25 +62,6 @@ function ConferenceModalController($scope, $firebaseArray, $q, conference, confe
 	};
 
 	$scope.downloadConferenceDatabase = function(conference) {
-		var currentJSONData = conference.currentJSONDatabase,
-			version = conference.currentDatabaseVersion;
-		DatabaseCreator.createDatabaseFromJSON(currentJSONData).then(function(db) {
-			var data = db.export();
-			saveData(data, conference.uid+'_'+version+'.sqlite3');
-		});
+		DownloadService.downloadDatabaseZip(conference.uid);
 	};
-
-	var saveData = (function () {
-	    var a = document.createElement("a");
-	    document.body.appendChild(a);
-	    a.style = "display: none";
-	    return function (data, fileName) {
-	        var blob = new Blob([data]),
-	            url = window.URL.createObjectURL(blob);
-	        a.href = url;
-	        a.download = fileName;
-	        a.click();
-	        window.URL.revokeObjectURL(url);
-	    };
-	}());
 }
