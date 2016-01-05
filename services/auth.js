@@ -28,6 +28,8 @@ function AuthenticationService($q, $rootScope, $cookies, $firebaseAuth, APIServi
 					var storedUserInfo = getUserInformation();
 					setAuthData(authData, storedUserInfo);
 					return storedUserInfo;
+				}, function(error) {
+					return false;
 				});
 			} else {
 				var deferred = $q.defer();

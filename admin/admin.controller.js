@@ -5,14 +5,16 @@ function AdminController($scope, $location, $rootScope, AuthenticationService, A
 	var ref = APIServices.getFirebaseRef();
 	$scope.isRootUser = false;
 
-	ref.onAuth(function() {
-		var userInformation = AuthenticationService.getUserInformation(),
-			authInformation = AuthenticationService.getAuthInformation();
+	ref.onAuth(function(adata) {
+		if(adata) {
+			var userInformation = AuthenticationService.getUserInformation(),
+				authInformation = AuthenticationService.getAuthInformation();
 
-		$scope.user_email = userInformation ? userInformation.email : false;
-		AuthenticationService.isRootUser().then(function(isRoot) {
-			if(isRoot) { $scope.isRootUser = isRoot; }
-		})
+			$scope.user_email = userInformation ? userInformation.email : false;
+			AuthenticationService.isRootUser().then(function(isRoot) {
+				if(isRoot) { $scope.isRootUser = isRoot; }
+			});
+		}
 	});
 
 	$scope.logout = function() {
