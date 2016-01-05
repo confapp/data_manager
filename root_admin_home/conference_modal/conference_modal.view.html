@@ -4,7 +4,7 @@
 	<div class='row'>
 		<div class='col-sm-8'>
 			<h5>ID: {{conference.uid}}</h3>
-			<a ng-click='downloadConferenceDatabase(conference)' target='_blank' class='btn btn-xs btn-default'>Download SQLite3 Database (version {{conference.currentDatabaseVersion}} from <span am-time-ago="conference.currentDatabaseUpdated*1000"></span>)</a>
+			<a ng-click='downloadConferenceDatabase(conference)' target='_blank' class='btn btn-xs btn-default'>Download Database (version {{conference.currentDatabaseVersion}} from <span am-time-ago="conference.currentDatabaseUpdated*1000"></span>)</a>
 		</div>
 		<div class='col-sm-4 text-right' style='margin-top: 10px'>
 			<button style='margin-right: 5px;' class='btn btn-xs btn-danger' ng-click='requestDeleteConference(conference.uid)'>Delete Conference</button>

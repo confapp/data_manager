@@ -381,7 +381,13 @@
 	<div class="col-sm-6">
 		<h2>Program Options<a href='javascript:void(0)' class='toggle_help' ng-click='optionsHelp = !optionsHelp'>[{{optionsHelp ? '-' : '?'}}]</a></h2>
 		<p class="description" ng-if='optionsHelp'>
-			Program guide options (if in doubt, leave these all at the defaults)
+			<strong>Conference Schedule</strong> allows users to add papers to a personal "schedule".
+			<strong>Reading Lists</strong> allows users to add papers to a personal "to-read" list.
+			<strong>User notes</strong> allows users to attach small personal notes to papers.
+			<strong>Data Sync</strong> allows users to sync the above three preferences across devices.
+			<strong>Best Talk Voting</strong> allows users to mark papers as "best talk" if they log in through Google.
+			The <strong>Web program base URL</strong> specifies the URL at which the Web program will be hosted.
+			If in doubt, leave these all at the defaults.
 		</p>
 		<div class='row'>
 			<div class='col-xs-4'>
@@ -392,14 +398,14 @@
 			</div>
 			<div class='col-xs-4'>
 				<label>
-					<input ng-model='conference.hasNotes' type="checkbox" />
-					User Notes
+					<input ng-model='conference.hasReadingList' type="checkbox" />
+					Reading Lists
 				</label>
 			</div>
 			<div class='col-xs-4'>
 				<label>
-					<input ng-model='conference.hasReadingList' type="checkbox" />
-					Reading Lists
+					<input ng-model='conference.hasNotes' type="checkbox" />
+					User Notes
 				</label>
 			</div>
 		</div>
@@ -431,6 +437,10 @@
 		</div>
 	</div>
 	<div class="col-sm-6">
+		<h2>Publish Program<a href='javascript:void(0)' class='toggle_help' ng-click='publishHelp = !publishHelp'>[{{optionsHelp ? '-' : '?'}}]</a></h2>
+		<p class="description" ng-if='publishHelp'>
+			When you click "Publish Database", the current source files will be compiled and <em>if compiled without errors</em>, any clients' programs will be automatically updated.
+		</p>
 		<div class='error text-danger bg-danger' ng-if='error'>
 			<h4>Source Data Error:</h4>
 			{{error.message}}
@@ -442,12 +452,18 @@
 				{{warning.message}}
 			</div>
 		</div>
-		<a target='_blank' class='btn btn-block btn-link' href='{{conference.webBaseURL}}'>
-			current program
-			<br />
-			(version {{conference.currentDatabaseVersion}},
-			published <span am-time-ago="conference.currentDatabaseUpdated*1000"></span>)
-		</a>
+		Current Database: version <strong>{{conference.currentDatabaseVersion}}</strong> published <span am-time-ago="conference.currentDatabaseUpdated*1000"></span>
+
+		<div class="btn-group" role="group" style='margin-top: 5px; margin-bottom: 5px;'>
+			<a target='_blank' class='btn btn-primary' href='{{conference.webBaseURL}}'>
+				<span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+				View Current Program
+			</a>
+			<a ng-click='downloadDatabase()' target='_blank' class='btn btn-default'>
+				<span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+				Download Current Database
+			</a>
+		</div>
 		<button class='btn btn-xl btn-success btn-block' ng-disabled='currentlyGenerating' ng-click='generateDatabase()'>
 			<h2>Publish Database</h2>
 			<p>with the current source data</p>
