@@ -33,7 +33,7 @@
                 }
 
                 foreach($_FILES[FILE_FIELD]['tmp_name'] as $key => $tmp_name) {
-                    $file_name = $_FILES[FILE_FIELD]['name'][$key];
+                    $file_name = strtolower()$_FILES[FILE_FIELD]['name'][$key]);
                     $file_size = $_FILES[FILE_FIELD]['size'][$key];
                     $file_tmp  = $_FILES[FILE_FIELD]['tmp_name'][$key];
                     $file_type = $_FILES[FILE_FIELD]['type'][$key];
@@ -53,7 +53,7 @@
             }
         } else if(isset($_POST['remove'])) {
             $destDirectory = 'uploads/'.$conferenceID.'/';
-            
+
             echo '{"result":"OK"}';
         }
     } else {
