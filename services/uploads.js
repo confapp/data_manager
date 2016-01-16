@@ -22,7 +22,7 @@ function UploadService($q, $http, AuthenticationService, Upload) {
 							resultingURIs = resp.data;
 						for(var i = 0; i<files.length; i++) {
 							rv.push({
-								name: files[i].name,
+								name: files[i].name.toLowerCase(),
 								uri: resultingURIs[i]
 							});
 						}
