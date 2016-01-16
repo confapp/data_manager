@@ -81,7 +81,7 @@ app.factory('ParseCSVPapers', [
 
 						if(!person_info.id) {
 							person_info.id = person_info.email || person_info.given+person_info.middle+person_info.last;
-							warnings.add(fname, "Could not find author ID", rowNum);
+							warnings.add(filename, "Could not find author ID", rowNum);
 						}
 						var person = get_or_put_person(person_info);
 						people.push(person);
