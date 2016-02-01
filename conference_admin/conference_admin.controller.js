@@ -398,7 +398,7 @@ function HomeController($q, $http, $scope, $location, $rootScope, Authentication
 			$scope.generatingInterimMessages.push('uploading json database...');
 			var jsonData = result.json;
 			//conferenceRef.child('currentJSONDatabase').set(jsonData);
-			firebaseRef.child('deployed_databases').child(conferenceID)).set(jsonData);
+			firebaseRef.child('deployed_databases').child(conferenceID).set(jsonData);
 			return result;
 			/*
 		}).then(function(result) {
