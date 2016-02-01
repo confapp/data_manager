@@ -24,6 +24,7 @@ function HomeController($q, $http, $scope, $location, $rootScope, Authentication
 		$scope.locations = $firebaseObject(conferenceRef.child('locations'));
 		$scope.locations.$bindTo($scope, 'locations');
 
+
 		$scope.mapLocations = {};
 		$q.all([$scope.maps.$loaded(), $scope.locations.$loaded()]).then(function() {
 			conferenceRef.child('maps').on('value', updateMapLocations);
@@ -396,10 +397,14 @@ function HomeController($q, $http, $scope, $location, $rootScope, Authentication
 		}).then(function(result) {
 			gim[gim.length-1] += 'done';
 			$scope.generatingInterimMessages.push('uploading json database...');
-			var jsonData = result.json;
 			//conferenceRef.child('currentJSONDatabase').set(jsonData);
-			firebaseRef.child('deployed_databases').child(conferenceID).set(jsonData);
+			firebaseRef.child('deployed_databases').child(conferenceID).child('schema').set(result.tables);
+			firebaseRef.child('deployed_databases').child(conferenceID).child('database').set(result.json);
+			firebaseRef.child('common_apps').child('main').child(conferenceID).update(result.dbInfo);
+			
 			return result;
+		}).then(function(result) {
+
 			/*
 		}).then(function(result) {
 			gim[gim.length-1] += 'done';
@@ -420,6 +425,29 @@ function HomeController($q, $http, $scope, $location, $rootScope, Authentication
 				return result;
 			});
 			*/
+			/*
+		$firebaseObject(ref.child('common_apps').child('main').child(conferenceID)).$bindTo();
+		//conferenceRef.child('name')).$watch(function() {
+
+		});
+
+		//var common_app_icon_uri = $firebaseO
+
+		/*
+				ref.child('common_apps').child('main').child(conference_uid).transaction(function(currentData) {
+					if(currentData) {
+						reject('"'+conference_uid+'" is not unique');
+					} else {
+						return {
+							conference_id: conference_uid,
+							icon_uri: data.primaryIcon.uri,
+							name: data.name,
+							start_day: 1451624400,
+							utc_offset: -300
+						};
+					}
+				}, function(err, committed, dataSnapshot) {
+				*/
 		}).then(function(result) {
 			gim[gim.length-1] += 'done';
 			result.database.close();

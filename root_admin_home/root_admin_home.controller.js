@@ -74,6 +74,50 @@ function RootAdminController($scope, $location, $rootScope, AuthenticationServic
 					reject(new Error('Only characters, numbers, underscores, and dashes in a conference id'));
 				}
 			});
+		}).then(function(data) {
+			return $q(function(resolve, reject) {
+				ref.child('common_apps').child('main').child(conference_uid).transaction(function(currentData) {
+					if(currentData) {
+						reject('"'+conference_uid+'" is not unique');
+					} else {
+						return {
+							conference_id: conference_uid,
+							icon_uri: data.primaryIcon.uri,
+							name: data.name,
+							start_day: 0,
+							utc_offset: 0
+						};
+					}
+				}, function(err, committed, dataSnapshot) {
+					if(err) {
+						reject(err);
+					} else {
+						resolve(dataSnapshot.val());
+					}
+				});
+			});
+		}).then(function() {
+			return $q(function(resolve, reject) {
+				ref.child('deployed_databases').child('default').once('value', function(dataSnapshot) {
+					resolve(dataSnapshot.val());
+				});
+			});
+		}).then(function(defaultDeployedDatabase) {
+			return $q(function(resolve, reject) {
+				ref.child('deployed_databases').child(conference_uid).transaction(function(currentData) {
+					if(currentData) {
+						reject('"'+conference_uid+'" is not unique');
+					} else {
+						return defaultData;
+					}
+				}, function(err, committed, dataSnapshot) {
+					if(err) {
+						reject(err);
+					} else {
+						resolve(dataSnapshot.val());
+					}
+				});
+			});
 		}).then(function() {
 			$scope.create_conference_error = false;
 			$scope.new_conf.id = '';

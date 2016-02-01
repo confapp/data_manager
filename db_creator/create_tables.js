@@ -136,7 +136,8 @@ app.service('CreateTables', ['$q', function($q) {
 				});
 				resolve(db);
 			});
-		}
+		},
+		tables: TABLES
 	};
 }]);
 /*

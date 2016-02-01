@@ -102,7 +102,8 @@ function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, WarningList, SQ
 			options.sessionTypes[sessionType.name] = sessionType;
 		});
 
-		var version, updated;
+		var version, updated,
+			dbInfo = {};
 
 		return CreateTables.initializeDatabase(db).then(function(db) {
 			return $q.all(parsePromises);
@@ -162,6 +163,13 @@ function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, WarningList, SQ
 				$icon_url: sourceData.primaryIcon.uri,
 				$schema_version: CURRENT_SCHEMA_VERSION
 			});
+
+			dbInfo = {
+				icon_uri: sourceData.primaryIcon.uri,
+				name: sourceData.name,
+				start_day: sourceData.start_day,
+				utc_offset: utc_offset
+			};
 			return db;
 		}).then(function(db) {
 			version = sourceData.currentDatabaseVersion ? sourceData.currentDatabaseVersion+1 : 1;
@@ -179,7 +187,9 @@ function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, WarningList, SQ
 				json: json,
 				version: version,
 				updated: updated,
-				warnings: options.warnings.serialize()
+				tables: CreateTables.tables,
+				warnings: options.warnings.serialize(),
+				dbInfo: dbInfo
 			};
 		});
 	}
