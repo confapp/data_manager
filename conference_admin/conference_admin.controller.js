@@ -401,9 +401,8 @@ function HomeController($q, $http, $scope, $location, $rootScope, Authentication
 			firebaseRef.child('deployed_databases').child(conferenceID).child('schema').set(result.tables);
 			firebaseRef.child('deployed_databases').child(conferenceID).child('database').set(result.json);
 			firebaseRef.child('common_apps').child('main').child(conferenceID).update(result.dbInfo);
-			
+
 			return result;
-		}).then(function(result) {
 
 			/*
 		}).then(function(result) {
