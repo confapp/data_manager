@@ -167,7 +167,7 @@ function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, WarningList, SQ
 			dbInfo = {
 				icon_uri: sourceData.primaryIcon.uri,
 				name: sourceData.name,
-				start_day: sourceData.start_day,
+				start_day: start_day,
 				utc_offset: utc_offset
 			};
 			return db;
