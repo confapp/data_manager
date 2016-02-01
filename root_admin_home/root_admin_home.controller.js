@@ -132,6 +132,20 @@ function RootAdminController($scope, $location, $rootScope, AuthenticationServic
 				if(err) { reject(err); }
 				else { resolve(); }
 			});
+		}).then(function() {
+			return $q(function(resolve, reject) {
+				ref.child('common_apps').child('main').child(conference_uid).remove(function(err) {
+					if(err) { reject(err); }
+					else { resolve(); }
+				});
+			});
+		}).then(function() {
+			return $q(function(resolve, reject) {
+				ref.child('deployed_databases').child(conference_uid).remove(function(err) {
+					if(err) { reject(err); }
+					else { resolve(); }
+				});
+			});
 		});
 	};
 }
