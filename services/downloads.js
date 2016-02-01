@@ -2,12 +2,13 @@ app.factory('DownloadService', DownloadService);
 
 DownloadService.$inject=['$q', 'DatabaseCreator', 'APIServices', '$firebaseObject'];
 function DownloadService($q, DatabaseCreator, APIServices, $firebaseObject) {
-	var conferencesRef = APIServices.getConferencesRef();
+	var conferencesRef = APIServices.getConferencesRef(),
+		firebaseRef = APIServices.getFirebaseRef();
 
 	return {
 		downloadDatabaseZip: function(conferenceID) {
 			var conference = conferencesRef.child(conferenceID),
-				jsonDatabase = $firebaseObject(conference.child('currentJSONDatabase')),
+				jsonDatabase = $firebaseObject(firebaseRef.child('deployed_databases').child(conferenceID)),
 				currentVersion = $firebaseObject(conference.child('currentDatabaseVersion')),
 				jsonData,
 				jsonString,
@@ -23,7 +24,6 @@ function DownloadService($q, DatabaseCreator, APIServices, $firebaseObject) {
 				jsonString = angular.toJson(jsonData);
 				jsonpString = 'var _cadata_ = ' + jsonString + ';';
 				filename = conferenceID + '_' + version;
-
 
 				return DatabaseCreator.createDatabaseFromJSON(jsonData);
 			}).then(function(sqlite3DB) {

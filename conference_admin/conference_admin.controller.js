@@ -5,6 +5,7 @@ function HomeController($q, $http, $scope, $location, $rootScope, Authentication
 	var ref = APIServices.getFirebaseRef();
 	var conferenceID = $location.search().conference;
 	var conferenceRef = APIServices.getConferencesRef().child(conferenceID);
+	var firebaseRef = APIServices.getFirebaseRef();
 
 	ref.onAuth(function() {
 		$scope.conference = $firebaseObject(conferenceRef);
@@ -396,7 +397,8 @@ function HomeController($q, $http, $scope, $location, $rootScope, Authentication
 			gim[gim.length-1] += 'done';
 			$scope.generatingInterimMessages.push('uploading json database...');
 			var jsonData = result.json;
-			conferenceRef.child('currentJSONDatabase').set(jsonData);
+			//conferenceRef.child('currentJSONDatabase').set(jsonData);
+			firebaseRef.child('deployed_databases').child(conferenceID)).set(jsonData);
 			return result;
 			/*
 		}).then(function(result) {
