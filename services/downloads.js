@@ -8,7 +8,7 @@ function DownloadService($q, DatabaseCreator, APIServices, $firebaseObject) {
 	return {
 		downloadDatabaseZip: function(conferenceID) {
 			var conference = conferencesRef.child(conferenceID),
-				jsonDatabase = $firebaseObject(firebaseRef.child('deployed_databases').child(conferenceID)),
+				jsonDatabase = $firebaseObject(firebaseRef.child('deployed_databases').child(conferenceID).child('database')),
 				currentVersion = $firebaseObject(conference.child('currentDatabaseVersion')),
 				jsonData,
 				jsonString,
