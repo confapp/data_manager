@@ -398,8 +398,14 @@ function HomeController($q, $http, $scope, $location, $rootScope, Authentication
 			gim[gim.length-1] += 'done';
 			$scope.generatingInterimMessages.push('uploading json database...');
 			//conferenceRef.child('currentJSONDatabase').set(jsonData);
-			firebaseRef.child('deployed_databases').child(conferenceID).child('schema').set(result.tables);
-			firebaseRef.child('deployed_databases').child(conferenceID).child('database').set(result.json);
+			var deployedDatabase = firebaseRef.child('deployed_databases').child(conferenceID);
+			deployedDatabase.update({
+				currentDatabaseVersion: result.version,
+				currentDatabaseUpdated: result.updated,
+				schema: result.tables,
+				database: result.json
+			})
+
 			firebaseRef.child('common_apps').child('main').child(conferenceID).update(result.dbInfo);
 
 			return result;
