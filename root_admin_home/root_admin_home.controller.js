@@ -108,7 +108,7 @@ function RootAdminController($scope, $location, $rootScope, AuthenticationServic
 					if(currentData) {
 						reject('"'+conference_uid+'" is not unique');
 					} else {
-						return defaultData;
+						return defaultDeployedDatabase;
 					}
 				}, function(err, committed, dataSnapshot) {
 					if(err) {
@@ -124,28 +124,6 @@ function RootAdminController($scope, $location, $rootScope, AuthenticationServic
 			$scope.new_conf.name = '';
 		}, function(err) {
 			$scope.create_conference_error = err.toString();
-		});
-	};
-	$scope.deleteConference = function(conference_uid) {
-		return $q(function(resolve, reject) {
-			ref.child('conferences').child(conference_uid).remove(function(err) {
-				if(err) { reject(err); }
-				else { resolve(); }
-			});
-		}).then(function() {
-			return $q(function(resolve, reject) {
-				ref.child('common_apps').child('main').child(conference_uid).remove(function(err) {
-					if(err) { reject(err); }
-					else { resolve(); }
-				});
-			});
-		}).then(function() {
-			return $q(function(resolve, reject) {
-				ref.child('deployed_databases').child(conference_uid).remove(function(err) {
-					if(err) { reject(err); }
-					else { resolve(); }
-				});
-			});
 		});
 	};
 }

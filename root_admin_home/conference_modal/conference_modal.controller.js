@@ -38,8 +38,30 @@ function ConferenceModalController($scope, $firebaseArray, $q, conference, confe
 	};
 
 	$scope.deleteConference = function() {
-		conferencesRef.child(conference_uid).remove();
-		$uibModalInstance.dismiss('cancel');
+		return $q(function(resolve, reject) {
+			ref.child('conferences').child(conference_uid).remove(function(err) {
+				if(err) { reject(err); }
+				else { resolve(); }
+			});
+		}).then(function() {
+			return $q(function(resolve, reject) {
+				ref.child('common_apps').child('main').child(conference_uid).remove(function(err) {
+					if(err) { reject(err); }
+					else { resolve(); }
+				});
+			});
+		}).then(function() {
+			return $q(function(resolve, reject) {
+				ref.child('deployed_databases').child(conference_uid).remove(function(err) {
+					if(err) { reject(err); }
+					else { resolve(); }
+				});
+			});
+		}).then(function() {
+			$uibModalInstance.dismiss('cancel');
+		}).catch(function(err) {
+			console.error(err);
+		});
 	};
 	$scope.dismiss = function() {
 		$uibModalInstance.dismiss('cancel');
