@@ -12,7 +12,7 @@ function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, WarningList, SQ
 	function createDatabaseFromJSON(jsonData) {
 		var db = new SQL.Database();
 		return CreateTables.initializeDatabase(db).then(function(db) {
-			angular.forEach(jsonData.database, function(data, tableName) {
+			angular.forEach(jsonData, function(data, tableName) {
 				var headers = data.headers;
 				var joinedHeaders = headers.join(', ')
 				var valueStatement = _.map(headers, function(headerName) {
