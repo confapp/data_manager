@@ -168,7 +168,9 @@ function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, WarningList, SQ
 				icon_uri: sourceData.primaryIcon.uri,
 				name: sourceData.name,
 				start_day: start_day,
-				utc_offset: utc_offset
+				utc_offset: utc_offset,
+				location: sourceData.location,
+				num_days: num_days
 			};
 			return db;
 		}).then(function(db) {
