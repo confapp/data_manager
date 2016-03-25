@@ -112,9 +112,8 @@ app.factory('ParseCSVSessions', [
 						}
 					}
 
-					var format = "D-M-YYYY HH:mm:ss",
-						start_tstamp = UNIXTime.getUnixTime(start_time, timezone, format),
-						end_tstamp = UNIXTime.getUnixTime(end_time, timezone, format),
+					var start_tstamp = UNIXTime.getUnixTime(start_time, timezone),
+						end_tstamp = UNIXTime.getUnixTime(end_time, timezone),
 						start = start_tstamp.isValid() ? start_tstamp.unix() : -1,
 						end = end_tstamp.isValid() ? end_tstamp.unix() : -1,
 						offset = start_tstamp._offset || 0;

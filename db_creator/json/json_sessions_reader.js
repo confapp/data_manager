@@ -32,7 +32,7 @@ app.factory('ParseJSONSessions', [
 													if(_.has(submissions, submission_id)) {
 														return submissions[submission_id];
 													} else {
-														warnings.add(filename, "Could not find submission with ID '" + submission_id + "'", WarningList.warningType.MISSING_SUBMISSION);
+														warnings.add(filename, "Could not find submission with ID '" + submission_id + "'");
 													}
 												})
 												.compact()
@@ -83,7 +83,7 @@ app.factory('ParseJSONSessions', [
 
 					session = new DataTypes.Event(session_info);
 					sessions[session.unique_id] = session;
-					schedule.push(session);
+					//schedule.push(session);
 				});
 			}
 		};

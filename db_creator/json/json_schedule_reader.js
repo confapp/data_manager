@@ -35,9 +35,9 @@ app.factory('ParseJSONSchedule', [
 							}
 						}
 
-						var format = "MMMM D, YYYY HH:mm:ss",
-							start_tstamp = UNIXTime.getUnixTime(start_time, timezone, format),
-							end_tstamp = UNIXTime.getUnixTime(end_time, timezone, format),
+
+						var start_tstamp = UNIXTime.getUnixTime(start_time, timezone),
+							end_tstamp = UNIXTime.getUnixTime(end_time, timezone),
 							start = start_tstamp.unix(),
 							end = end_tstamp.unix(),
 							offset = start_tstamp._offset;
@@ -45,15 +45,14 @@ app.factory('ParseJSONSchedule', [
 						_.each(slot.sessions, function(session_info) {
 							var unique_id = session_info.session,
 								session = sessions[unique_id],
-								session_info_clone = _.extend({}, session),
 								loc = location_map[session_info.room];
 
-							session_info_clone.location = session_info_clone.location || loc;
-							session_info_clone.start = start;
-							session_info_clone.end = end;
-							session_info_clone.offset = offset;
+							session.start = start;
+							session.end = end;
+							session.offset = offset;
+							session.location = session.location || loc;
 
-							schedule.push(new DataTypes.Event(session_info_clone));
+							schedule.push(session);
 						});
 					});
 				});
