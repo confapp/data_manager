@@ -15,9 +15,9 @@ app.factory('ParseJSONPapers', [
 				_.each(data, function(submission_info, unique_id) {
 					submission_info = data[unique_id];
 
-					var submission_authors = submission_info.authors;;
+					var submission_authors = submission_info.authors;
 					if(!submission_authors) {
-						submission_authors = [ ];
+						submission_authors = [];
 					}
 
 					authors = _.map(submission_authors, function(author_info) {
