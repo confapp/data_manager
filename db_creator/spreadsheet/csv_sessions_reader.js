@@ -2,18 +2,11 @@ app.factory('ParseCSVSessions', [
 	'CSVHeaders',
 	'WarningList',
 	'DataTypes',
-	function(CSVHeaders, WarningList, DataTypes) {
+	'UNIXTime',
+	function(CSVHeaders, WarningList, DataTypes, UNIXTime) {
 		return {
 			parseCSVSessions: function(options, data, filename) {
 				var my_date_offset = (new Date()).getTimezoneOffset() * 60;
-
-				function getUnixTime(date_string, time_zone) {
-					var date = new Date(date_string),
-						format = "D-M-YYYY HH:mm:ss",
-						moment_obj = moment.tz(date.getDate() + "-" + (date.getMonth()+1) + "-" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() , format, time_zone);
-
-					return moment_obj;
-				}
 
 				var annotations = options.annotations,
 					conference = options.conference,
@@ -119,8 +112,9 @@ app.factory('ParseCSVSessions', [
 						}
 					}
 
-					var start_tstamp = getUnixTime(start_time, timezone),
-						end_tstamp = getUnixTime(end_time, timezone),
+					var format = "D-M-YYYY HH:mm:ss",
+						start_tstamp = UNIXTime.getUnixTime(start_time, timezone, format),
+						end_tstamp = UNIXTime.getUnixTime(end_time, timezone, format),
 						start = start_tstamp.isValid() ? start_tstamp.unix() : -1,
 						end = end_tstamp.isValid() ? end_tstamp.unix() : -1,
 						offset = start_tstamp._offset || 0;

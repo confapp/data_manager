@@ -1,3 +1,95 @@
+app.factory('ParseJSONSessions', [
+	'WarningList',
+	'DataTypes',
+	function(WarningList, DataTypes) {
+		return {
+			parseJSONSessions: function(options, data, filename) {
+				var annotations = options.annotations,
+					conference = options.conference,
+					sessions = options.sessions,
+					location_map = options.locations,
+					submissions = options.submissions,
+					schedule = options.schedule,
+					get_or_put_institution = _.bind(options.getOrPutInstitution, options),
+					get_or_put_person = _.bind(options.getOrPutPerson, options),
+					warnings = options.warnings,
+					session_types = options.sessionTypes,
+					timezone = options.timezone,
+					defaultType = filename.replace(/\.json/gi, '');
+
+				_.each(data, function(session_info, unique_id) {
+					var location = false,
+						loc = location_map[session_info.room],
+						submission_ids = session_info.submissions,
+						num_submissions = submission_ids.length,
+						session_submissions = [],
+						submission_id,
+						date_problem, session_info, session;
+
+
+					var session_submissions = _	.chain(session_info.submissions)
+												.map(function(submission_id) {
+													if(_.has(submissions, submission_id)) {
+														return submissions[submission_id];
+													} else {
+														warnings.add(filename, "Could not find submission with ID '" + submission_id + "'", WarningList.warningType.MISSING_SUBMISSION);
+													}
+												})
+												.compact()
+												.value();
+
+					var type = session_info.type,
+						title = session_info.s_title;
+
+					var demonyms = session_types[type] || {event_demonym: "", person_demonym: ""};
+
+					title = title.replace("&amp;", "&").replace("&nbsp;", " ").replace(/^[a-zA-Z\s\.]+:\s* /, "").trim();
+					//console.log(type, conference.demonyms[type]);
+
+					var chairs = [];
+					if(session_info.chair) {
+						var last_name = session_info.chair.slice(session_info.chair.lastIndexOf(" ")).trim();
+						var first_name = session_info.chair.slice(0, session_info.chair.indexOf(" ")).trim();
+
+						var chair_info = {
+							id: session_info.chair,
+							given: first_name,
+							middle: "",
+							last: last_name,
+							name: session_info.chair,
+							institutions: []
+						};
+						var chair;
+						if(options.people[session_info.chair]) {
+							chair = options.people[session_info.chair];
+						} else {
+							chair = get_or_put_person(chair_info);
+						}
+
+						chairs.push(chair);
+						//}
+					}
+
+					session_info = {
+						location: loc,
+						unique_id: unique_id,
+						title: title,
+						submissions: session_submissions,
+						type: type,
+						event_demonym: demonyms.event,
+						person_demonym: demonyms.person,
+						chairs: chairs,
+					};
+
+					session = new DataTypes.Event(session_info);
+					sessions[session.unique_id] = session;
+					schedule.push(session);
+				});
+			}
+		};
+	}
+]);
+/*
 var read_json = require('./read_json').read_json,
 	data_type = require('../data_types'),
 	my_date_offset = (new Date()).getTimezoneOffset() * 60,
@@ -52,7 +144,7 @@ function handle_json_data(data, sessions, schedule, options, fname) {
 
 		var demonyms = session_types[type] || {event_demonym: "", person_demonym: ""};
 
-		title = title.replace("&amp;", "&").replace("&nbsp;", " ").replace(/^[a-zA-Z\s\.]+:\s*/, "").trim();
+		title = title.replace("&amp;", "&").replace("&nbsp;", " ").replace(/^[a-zA-Z\s\.]+:\s* /, "").trim();
 		//console.log(type, conference.demonyms[type]);
 
 		var chairs = [];
@@ -77,26 +169,6 @@ function handle_json_data(data, sessions, schedule, options, fname) {
 
 			chairs.push(chair);
 			//}
-		/*
-			console.log(session_info.chair);
-			var institution_info = {
-					institution: row["Chair Affiliation"]
-				},
-				institution = new data_type.Institution(institution_info);
-
-			
-			var chair_id = row["Chair ID"] || undefined;
-			var chair_info = {
-				id: chair_id,
-				given: row["Chair First Name"],
-				middle: "",
-				last: row["Chair Last Name"],
-				name: row["Chair First Name"] + " " + row["Chair Last Name"],
-				institutions: [institution]
-			},
-			chair = get_or_put_person(chair_info);
-			chairs.push(chair);
-			*/
 		}
 
 		session_info = {
@@ -128,10 +200,12 @@ exports.read_sessions = function(filenames, options, callback) {
 			var data = options.contents[fname];
 			handle_json_data(data, sessions, schedule, options, fname);
 		});
-		
+
 		resolve({
 			sessions: sessions,
 			schedule: schedule
 		});
 	});
 };
+
+*/

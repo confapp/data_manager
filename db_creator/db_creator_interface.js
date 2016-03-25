@@ -2,8 +2,8 @@ var CURRENT_SCHEMA_VERSION='A',
 	SECperHR = 60*60*24;
 app.factory('DatabaseCreator', DatabaseCreator);
 
-DatabaseCreator.$inject=['$q', 'CreateTables', 'DataTypes', 'CSVReader', 'WarningList', 'SQLtoJSON'];
-function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, WarningList, SQLtoJSON) {
+DatabaseCreator.$inject=['$q', 'CreateTables', 'DataTypes', 'CSVReader', 'JSONReader', 'WarningList', 'SQLtoJSON'];
+function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, JSONReader, WarningList, SQLtoJSON) {
 	var service = {
 		createDatabase: createDatabase,
 		createDatabaseFromJSON: createDatabaseFromJSON
@@ -78,9 +78,14 @@ function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, WarningList, SQ
 
 		var parsePromises = _.map(sourceData.dataFiles, function(dataFile) {
 			var uri = dataFile.uri.uri,
-				fileName = dataFile.name;
+				fileName = dataFile.name,
+				extension = getExtension(fileName).trim().toLowerCase();
 
-			return CSVReader.parseCSV(options, uri, fileName);
+			if(extension === 'json') {
+				return JSONReader.parseJSON(options, uri, fileName);
+			} else {
+				return CSVReader.parseCSV(options, uri, fileName);
+			}
 		});
 
 		_.each(sourceData.locations, function(location) {
@@ -109,6 +114,8 @@ function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, WarningList, SQ
 			return $q.all(parsePromises);
 		}).then(function(parsedValues) {
 			return CSVReader.handleParsedCSVs(options, parsedValues);
+		}).then(function(parsedValues) {
+			return JSONReader.handleParsedJSONs(options, parsedValues);
 		}).then(function() {
 			options.schedule.sort(function(a, b) { return a.start - b.start; });
 		}).then(function() {
@@ -194,6 +201,10 @@ function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, WarningList, SQ
 				dbInfo: dbInfo
 			};
 		});
+	}
+
+	function getExtension(filename) {
+		return filename.split('.').pop();
 	}
 
 	return service;

@@ -23,6 +23,7 @@ function CSVReader($q, CSVHeaders, DetermineCSVType, ParseCSVAttachments, ParseC
 					category = csvType.category;
 
 				return {
+					filetype: 'csv',
 					filename: filename,
 					category: category,
 					data: data
@@ -34,7 +35,7 @@ function CSVReader($q, CSVHeaders, DetermineCSVType, ParseCSVAttachments, ParseC
 
 			_.each(CATEGORY_PARSE_ORDER, function(category) {
 				var categoryPromises = _.map(parsedValues, function(parsedValue) {
-					if(parsedValue.category === category) {
+					if(parsedValue.filetype === 'csv' && parsedValue.category === category) {
 						var filename = parsedValue.filename;
 						if(category === 'pcs_files') {
 							return ParseCSVPapers.parseCSVPapers(options, parsedValue.data, parsedValue.filename);
@@ -51,10 +52,7 @@ function CSVReader($q, CSVHeaders, DetermineCSVType, ParseCSVAttachments, ParseC
 				parsePromises.push.apply(parsePromises, categoryPromises);
 			});
 			//return $q.all(parsePromises);
+			return parsedValues;
 		}
 	};
 };
-
-function endsWith(str, suffix) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
-}

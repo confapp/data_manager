@@ -54,17 +54,22 @@ app.factory('CSVHeaders', function() {
 	function RowObject(obj) {
 		this.obj = obj;
 	}
-	RowObject.prototype.get1 = function() {
-		var value = this.get.apply(this, arguments);
-		return _.isArray(value) ? value[0] : value;
-	};
-	RowObject.prototype.getArray = function() {
-		var value = this.get.apply(this, arguments);
-		return _.isArray(value) ? value : [value];
-	};
-	RowObject.prototype.get = function(fieldName) {
-		return this.obj[fieldName];
-	};
+
+	(function(My) {
+		var proto = My.prototype;
+
+		proto.get1 = function() {
+			var value = this.get.apply(this, arguments);
+			return _.isArray(value) ? value[0] : value;
+		};
+		proto.getArray = function() {
+			var value = this.get.apply(this, arguments);
+			return _.isArray(value) ? value : [value];
+		};
+		proto.get = function(fieldName) {
+			return this.obj[fieldName];
+		};
+	}(RowObject));
 
 	function getHeaderIndex(header_row, header_info) {
 		var regex = header_info[0],

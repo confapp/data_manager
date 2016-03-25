@@ -26,7 +26,8 @@ app.factory('WarningList', [
 			WarningList: WarningList,
 			warningType: {
 				MISSING_LOCATION: "MISSING_LOCATION",
-				MISSING_ANNOTATION: "MISSING_ANNOTATION"
+				MISSING_ANNOTATION: "MISSING_ANNOTATION",
+				MISSING_SUBMISSION: "MISSING_SUBMISSION"
 			}
 		};
 	}
