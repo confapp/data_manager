@@ -2,7 +2,7 @@ app.factory('JSONReader', JSONReader);
 
 JSONReader.$inject=['$q', '$http', 'ParseJSONPapers', 'ParseJSONSessions', 'ParseJSONSchedule'];
 function JSONReader($q, $http, ParseJSONPapers, ParseJSONSessions, ParseJSONSchedule) {
-	var CATEGORY_PARSE_ORDER = ['papers', 'sessions', 'schedule'];
+	var CATEGORY_PARSE_ORDER = ['entities', 'sessions', 'schedule'];
 
 	return {
 		parseJSON: function(options, uri, filename) {
@@ -35,7 +35,7 @@ function JSONReader($q, $http, ParseJSONPapers, ParseJSONSessions, ParseJSONSche
 							return ParseJSONSessions.parseJSONSessions(options, parsedValue.value, parsedValue.filename);
 						} else if(category === 'schedule') {
 							return ParseJSONSchedule.parseJSONSchedule(options, parsedValue.value, parsedValue.filename);
-						} else if(category === 'papers') {
+						} else if(category === 'entities') {
 							return ParseJSONPapers.parseJSONPapers(options, parsedValue.value, parsedValue.filename);
 						} else {
 							throw new Error('Unknown JSON type ' + parsedValue.category);

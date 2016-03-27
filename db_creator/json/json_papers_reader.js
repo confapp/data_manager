@@ -8,7 +8,7 @@ app.factory('ParseJSONPapers', [
 					get_or_put_person = _.bind(options.getOrPutPerson, options),
 					annotations = options.annotations,
 					conference = options.conference,
-					presentation_types = options.presentation_types,
+					presentation_types = options.presentationTypes,
 					warnings = options.warnings,
 					submission, author_name, annos, authors, type, demonyms;
 
@@ -72,7 +72,7 @@ app.factory('ParseJSONPapers', [
 						event_demonym: demonyms.event_demonym,
 						person_demonym: demonyms.person_demonym,
 					});
-					submissions[submission.unique_id] = submission;
+					options.submissions[submission.unique_id] = submission;
 				});
 			}
 		};
