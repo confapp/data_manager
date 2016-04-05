@@ -95,18 +95,18 @@ app.factory('ParseCSVSessions', [
 					var date = obj.get1("date"),
 						start_time = date + " " + obj.get1("start_time"),
 						end_time = date + " " + obj.get1("end_time"),
-						date_problem = !moment(date);
+						date_problem = !Date.parse(date);
 
 					if(date_problem) {
 						warnings.add(filename, "Could not parse date '" + date + "'. Ignoring this row. Try using the format MMM DD, YYYY (e.g. Apr 29, 2013)", rowNum);
 						return;
 					} else {
-						if(!moment(start_time)) {
+						if(!Date.parse(start_time)) {
 							warnings.add(filename, "Could not parse time '" + obj.get1("start_time") + "'. Ignoring this row. Try using the format HH:MM AM/PM (e.g. 1:00 PM)", rowNum);
 							return;
 						}
 
-						if(!moment(end_time)) {
+						if(!Date.parse(end_time)) {
 							warnings.add(filename, "Could not parse end time '" + obj.get1("end_time") + "'. Ignoring this row. Try using the format HH:MM AM/PM (e.g. 1:00 PM)", rowNum);
 							return;
 						}
