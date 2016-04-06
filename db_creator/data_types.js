@@ -27,7 +27,11 @@ app.service('DataTypes', ['$q', function($q) {
 
 	(function(My) {
 		var proto = My.prototype;
-		proto.merge = function(other) { };
+		proto.merge = function(other) {
+			if(this.institutions.length === 0 && other.institutions.length > 0) {
+				this.institutions = other.institutions;
+			}
+		};
 		proto.equals = function(other) {
 			return other instanceof My && other.id === this.id;
 		};
