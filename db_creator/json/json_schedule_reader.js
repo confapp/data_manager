@@ -47,12 +47,16 @@ app.factory('ParseJSONSchedule', [
 								session = sessions[unique_id],
 								loc = location_map[session_info.room];
 
-							session.start = start;
-							session.end = end;
-							session.offset = offset;
-							session.location = session.location || loc;
+							if(session) {
+								session.start = start;
+								session.end = end;
+								session.offset = offset;
+								session.location = session.location || loc;
 
-							schedule.push(session);
+								schedule.push(session);
+							} else {
+								warnings.add(filename, "Could not find session '" + unique_id + "'");
+							}
 						});
 					});
 				});
