@@ -21,7 +21,6 @@ app.factory('ParseJSONSessions', [
 					var location = false,
 						loc = location_map[session_info.room],
 						submission_ids = session_info.submissions,
-						num_submissions = submission_ids.length,
 						session_submissions = [],
 						submission_id,
 						date_problem, session_info, session;
