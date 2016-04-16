@@ -9,7 +9,7 @@ app.factory('ParseJSONSchedule', [
 					annotaitons = options.annotations,
 					location_map = options.locations,
 					submissions = options.submissions,
-					addWarning = options.addWarning,
+					warnings = options.warnings,
 					schedule = options.schedule,
 					timezone = options.timezone;
 
