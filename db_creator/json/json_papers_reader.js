@@ -46,7 +46,7 @@ app.factory('ParseJSONPapers', [
 					demonyms = presentation_types[type] || {event_demonym: "", person_demonym: "", duration: false};
 					annos = [];
 					if(submission_info.award || submission_info.hm) {
-						submission_info.award = submission_info.hm ? "Honorable Mention" : "Best";
+						submission_info.award = submission_info.hm ? "honorable" : "best";
 						((submission_info.award+"") || "").split(",").forEach(function(annotation_name) {
 							var i = 0,
 								len = annotations.length,
