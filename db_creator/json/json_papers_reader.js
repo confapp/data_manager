@@ -48,14 +48,12 @@ app.factory('ParseJSONPapers', [
 					if(submission_info.award || submission_info.hm) {
 						submission_info.award = submission_info.hm ? "honorable" : "best";
 						((submission_info.award+"") || "").split(",").forEach(function(annotation_name) {
-							var i = 0,
-								len = annotations.length,
-								anno;
-							for(;i<len; i++) {
-								anno = annotations[i];
-								if(anno.name === annotation_name) {
-									annos.push(anno);
-								}
+							if(annotations.hasOwnProperty(annotation_name)) {
+								var anno = annotations[annotation_name];
+								annos.push(anno);
+								anno.markAsUsed();
+							} else {
+								warnings.add(filename, "Could not find annotation '"+annotation_name+"'", rowNum, WarningList.warningType.MISSING_ANNOTATION, {annotation: annotation_name});
 							}
 						});
 					}
