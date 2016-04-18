@@ -11,6 +11,7 @@ app.factory('ParseJSONSchedule', [
 					submissions = options.submissions,
 					warnings = options.warnings,
 					schedule = options.schedule,
+					missingLocations = options.missingLocations,
 					timezone = options.timezone;
 
 				_.each(data, function(day) {
@@ -52,6 +53,7 @@ app.factory('ParseJSONSchedule', [
 								loc = location_map[session_info.room];
 
 								if(!loc) {
+									missingLocations[session_info.room] = true;
 									warnings.add(filename, "Could not find room '" + session_info.room + "' for session '" + unique_id + "'");
 								}
 							}

@@ -44,6 +44,7 @@ function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, JSONReader, War
 				locations: {},
 				presentationTypes: {},
 				sessionTypes: {},
+				missingLocations: {},
 				timezone: sourceData.timeZone,
 				schedule: [],
 				getOrPutPerson: function(person_options) {
@@ -198,6 +199,7 @@ function DatabaseCreator($q, CreateTables, DataTypes, CSVReader, JSONReader, War
 				updated: updated,
 				tables: CreateTables.tables,
 				warnings: options.warnings.serialize(),
+				missingLocations: _.keys(options.missingLocations).sort(),
 				dbInfo: dbInfo
 			};
 		});

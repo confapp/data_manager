@@ -395,6 +395,10 @@ function HomeController($q, $http, $scope, $location, $rootScope, Authentication
 			$scope.generatingInterimMessages.push('generating database...');
 			return DatabaseCreator.createDatabase(sourceData);
 		}).then(function(result) {
+			var missingLocations = result.missingLocations;
+			console.log(missingLocations);
+			return result;
+		}).then(function(result) {
 			gim[gim.length-1] += 'done';
 			$scope.generatingInterimMessages.push('uploading json database...');
 			//conferenceRef.child('currentJSONDatabase').set(jsonData);
