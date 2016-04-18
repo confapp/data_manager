@@ -44,12 +44,16 @@ app.factory('ParseJSONSchedule', [
 
 						_.each(slot.sessions, function(session_info) {
 							var unique_id, loc;
-							
+
 							if(_.isString(session_info)) {
 								unique_id = session_info;
 							} else {
 								unique_id = session_info.session;
 								loc = location_map[session_info.room];
+
+								if(!loc) {
+									warnings.add(filename, "Could not find room '" + session_info.room + "' for session '" + unique_id + "'");
+								}
 							}
 							var session = sessions[unique_id];
 
