@@ -21,6 +21,7 @@ app.factory('ParseCSVSessions', [
 					objects = CSVHeaders.dataToObjects(data, CSVHeaders.headers.session),
 					session_types = options.sessionTypes,
 					timezone = options.timezone,
+					missingLocations = options.missingLocations,
 					defaultType = filename.replace(/\.csv/gi, '');
 
 				_.each(objects, function(obj, index) {
@@ -30,6 +31,7 @@ app.factory('ParseCSVSessions', [
 						session_submissions = [];
 
 					if(!loc) {
+						missingLocations[location] = true;
 						warnings.add(filename, "Could not find location '" + location + "'.", rowNum, WarningList.warningType.MISSING_LOCATION, {location: location});
 					}
 
