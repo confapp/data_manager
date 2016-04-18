@@ -230,11 +230,11 @@ app.service('DataTypes', ['$q', function($q) {
 							"VALUES ($name, $seq, $map_name, $file, $map_uri, $x_pct, $y_pct)", {
 						$name: this.name,
 						$seq: seq,
-						$file: map.image.name,
+						$file: map.image ? map.image.name : '',
 						$x_pct: this.pctX,
 						$y_pct: this.pctY,
-						$map_uri: map.image.uri,
-						$map_name: map.name
+						$map_uri: map.image ? map.image.uri : '',
+						$map_name: map.name || ''
 					});
 					self.pk = getLastRowID(db);
 					resolve(self.pk);

@@ -396,7 +396,14 @@ function HomeController($q, $http, $scope, $location, $rootScope, Authentication
 			return DatabaseCreator.createDatabase(sourceData);
 		}).then(function(result) {
 			var missingLocations = result.missingLocations;
-			console.log(missingLocations);
+			_.each(result.missingLocations, function(location_id) {
+				conferenceRef.child('locations').push({
+					id: location_id,
+					name: location_id,
+					pctX: -1,
+					pctY: -1
+				});
+			});
 			return result;
 		}).then(function(result) {
 			gim[gim.length-1] += 'done';
