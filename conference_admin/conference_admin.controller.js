@@ -1,7 +1,7 @@
 app.controller('HomeController', HomeController);
 
-HomeController.$inject = ['$q', '$http', '$scope', '$location', '$rootScope', 'AuthenticationService', '$firebaseObject', '$firebaseArray', 'DatabaseCreator', 'APIServices', 'UploadService', 'DownloadService'];
-function HomeController($q, $http, $scope, $location, $rootScope, AuthenticationService, $firebaseObject, $firebaseArray, DatabaseCreator, APIServices, UploadService, DownloadService) {
+HomeController.$inject = ['$q', '$http', '$scope', '$location', '$rootScope', '$uibModal', 'AuthenticationService', '$firebaseObject', '$firebaseArray', 'DatabaseCreator', 'APIServices', 'UploadService', 'DownloadService'];
+function HomeController($q, $http, $scope, $location, $rootScope, $uibModal, AuthenticationService, $firebaseObject, $firebaseArray, DatabaseCreator, APIServices, UploadService, DownloadService) {
 	var ref = APIServices.getFirebaseRef();
 	var conferenceID = $location.search().conference;
 	var conferenceRef = APIServices.getConferencesRef().child(conferenceID);
@@ -51,6 +51,19 @@ function HomeController($q, $http, $scope, $location, $rootScope, Authentication
 			if(fileInfos.length > 0) {
 				conferenceRef.child('annotationTypes').child(key).child('icon').set(fileInfos[0]);
 				//annotationType.icon = fileInfos[0];
+			}
+		});
+	};
+
+	$scope.showUserData = function() {
+		var modalInstance = $uibModal.open({
+			animation: true,
+			templateUrl: 'user_data/user_data.view.html',
+			controller: 'UserDataController',
+			resolve: {
+				conference_uid: function() {
+					return conferenceID;
+				}
 			}
 		});
 	};
