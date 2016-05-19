@@ -183,7 +183,7 @@ function HomeController($q, $http, $scope, $location, $rootScope, $uibModal, Aut
 
 	$scope.removeDataFile = function(file, key) {
 		conferenceRef.child('dataFiles').child(key).remove();
-		UploadService.removeDataFile(file.uri, conferenceID);
+		UploadService.removeDataFile(file.name, conferenceID);
 	};
 
 	$scope.updateIcon = function(file) {

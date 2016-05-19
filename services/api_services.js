@@ -2,12 +2,28 @@ app.factory('APIServices', APIServices);
 
 APIServices.$inject=['$q', '$http'];
 function APIServices($q, $http) {
-	var ref = new Firebase('https://confapp-data-sync.firebaseio.com'),
+	var config = {
+		apiKey: "AIzaSyC0rxn5Oipwn0mH8gjV0DjqebTfwmeQm-U",
+		authDomain: "confapp-data-sync.firebaseapp.com",
+		databaseURL: "https://confapp-data-sync.firebaseio.com",
+		storageBucket: "confapp-data-sync.appspot.com",
+	};
+	firebase.initializeApp(config);
+
+	var ref = firebase.database().ref(),
 		conferencesRef = ref.child('conferences'),
+		storageRef = firebase.storage().ref(),
+		authRef = firebase.auth().ref(),
 		tz_api_key = "AIzaSyCh4eAVGTJRsv-dDKatS2acYi-P1N8tjpU",
 		geocode_api_key = "AIzaSyCDbBLHTSIKqafSpdM-tp_cUYEPtyJ68kM";
 
 	var service = {
+		getStorageRef: function() {
+			return storageRef;
+		},
+		getAuthRef: function() {
+			return authRef;
+		},
 		getFirebaseRef: function() {
 			return ref;
 		},

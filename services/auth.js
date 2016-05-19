@@ -2,14 +2,11 @@ app.factory('AuthenticationService', AuthenticationService);
 
 AuthenticationService.$inject=['$q', '$rootScope', '$cookies', '$firebaseAuth', 'APIServices'];
 function AuthenticationService($q, $rootScope, $cookies, $firebaseAuth, APIServices) {
-	var ref = APIServices.getFirebaseRef();
 	var service = {
 		login: function(email, password) {
-			var auth = $firebaseAuth(ref);
-
-			return auth.$authWithPassword({
-				email    : email,
-				password : password
+			var auth = APIServices.getAuthRef();
+			return $q(function(resolve, reject) {
+				auth.signInWithEmailAndPassword(email, password).then(resolve, reject);
 			}).then(function(authData) {
 				var userInfo = {
 					email: email
@@ -22,7 +19,7 @@ function AuthenticationService($q, $rootScope, $cookies, $firebaseAuth, APIServi
 		isLoggedIn: function() {
 			var authInfo = getAuthInformation();
 			if(authInfo) {
-				var auth = $firebaseAuth(ref);
+				var auth = APIServices.getAuthRef();
 
 				return auth.$authWithCustomToken(authInfo.token).then(function(authData) {
 					var storedUserInfo = getUserInformation();
@@ -38,12 +35,15 @@ function AuthenticationService($q, $rootScope, $cookies, $firebaseAuth, APIServi
 			}
 		},
 		logout: function() {
-			var auth = $firebaseAuth(ref);
+			var auth = APIServices.getAuthRef();
 			clearAuthData();
-			auth.$unauth();
+			return $q(function(resolve, reject) {
+				auth.signOut(resolve, reject);
+			});
 		},
 		isRootUser: function() {
 			return $q(function(resolve, reject) {
+				var ref = APIServices.getFirebaseRef();
 				var userInformation = getUserInformation(),
 					authInformation = getAuthInformation();
 				try {

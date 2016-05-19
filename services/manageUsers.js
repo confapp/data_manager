@@ -2,7 +2,6 @@ app.factory('UserManagementService', UserManagementService);
 
 UserManagementService.$inject=['$q', '$rootScope', '$cookies', '$firebaseArray', '$firebaseAuth', 'APIServices', 'AuthenticationService'];
 function UserManagementService($q, $rootScope, $cookies, $firebaseArray, $firebaseAuth, APIServices, AuthenticationService) {
-	var ref = APIServices.getFirebaseRef();
 	var service = {
 		createUser: createUser,
 		resetPassword: resetPassword,
@@ -11,17 +10,10 @@ function UserManagementService($q, $rootScope, $cookies, $firebaseArray, $fireba
 		changePassword: changePassword
 	};
 	function createUser(email, password) {
+		var authRef = APIServices.getAuthRef();
+
 		return $q(function(resolve, reject) {
-			ref.createUser({
-				email: email,
-				password: password
-			}, function(error, userData) {
-				if (error) {
-					reject(error);
-				} else {
-					resolve(userData);
-				}
-			});
+			authRef.createUserWithEmailAndPassword(email, password).then(resolve, reject);
 		}).then(function(userData) {
 			var uid = userData.uid;
 			var toSaveUserInfo = {
@@ -30,6 +22,7 @@ function UserManagementService($q, $rootScope, $cookies, $firebaseArray, $fireba
 				conferences: {}
 			};
 			return new $q(function(resolve, reject) {
+				var ref = APIServices.getFirebaseRef();
 				ref.child('admin_users').child(uid).set(toSaveUserInfo,
 					function(err) {
 						if(err) {
@@ -44,20 +37,15 @@ function UserManagementService($q, $rootScope, $cookies, $firebaseArray, $fireba
 	}
 
 	function resetPassword(email) {
+		var authRef = APIServices.getAuthRef();
+
 		return $q(function(resolve, reject) {
-			ref.resetPassword({
-				email: email
-			}, function(error) {
-				if (error) {
-					reject(error);
-				} else {
-					resolve();
-				}
-			});
+			authRef.sendPasswordResetEmail(email).then(resolve, reject);
 		});
 	}
 	function changeEmail(fromEmail, toEmail, password, uid) {
 		return $q(function(resolve, reject) {
+			var authRef = APIServices.getAuthRef();
 			ref.changeEmail({
 				oldEmail : fromEmail,
 				newEmail : toEmail,
@@ -88,8 +76,8 @@ function UserManagementService($q, $rootScope, $cookies, $firebaseArray, $fireba
 	};
 
 	function removeUser(email, password, uid) {
-		var auth = $firebaseAuth(ref);
-		return auth.$authWithPassword({
+		var authRef = APIServices.getAuthRef();
+		return authRef.$authWithPassword({
 			email    : email,
 			password : password
 		}).then(function() {
@@ -122,6 +110,7 @@ function UserManagementService($q, $rootScope, $cookies, $firebaseArray, $fireba
 
 	function changePassword(email, old_password, new_password) {
 		return $q(function(resolve, reject) {
+			var authRef = APIServices.getAuthRef();
 			ref.changePassword({
 				email: email,
 				oldPassword: old_password,
