@@ -4,7 +4,8 @@ RootAdminController.$inject = ['$scope', '$location', '$rootScope', 'Authenticat
 
 function RootAdminController($scope, $location, $rootScope, AuthenticationService, UserManagementService, $firebaseArray, $firebaseObject, $q, $uibModal, APIServices) {
 	var ref = APIServices.getFirebaseRef();
-	ref.onAuth(function() {
+	var authRef = APIServices.getAuthRef();
+	authRef.onAuthStateChanged(function() {
 		$scope.users = $firebaseArray(ref.child('admin_users'));
 		$scope.conferences = $firebaseObject(ref.child('conferences'));
 	});

@@ -3,7 +3,8 @@ app.controller('ChooseConferenceController', ChooseConferenceController);
 ChooseConferenceController.$inject = ['$scope', '$location', '$rootScope', 'AuthenticationService', '$firebaseObject', 'APIServices', '$filter'];
 function ChooseConferenceController($scope, $location, $rootScope, AuthenticationService, $firebaseObject, APIServices, $filter) {
 	var ref = APIServices.getFirebaseRef();
-	ref.onAuth(function() {
+	var authRef = APIServices.getAuthRef();
+	authRef.onAuthStateChanged(function() {
 		var authInfo = AuthenticationService.getAuthInformation();
 		if(authInfo) {
 			var myConferencesRef = ref.child('admin_users').child(authInfo.uid).child('conferences');

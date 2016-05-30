@@ -6,7 +6,8 @@ function ConferenceModalController($scope, $firebaseArray, $q, conference, confe
 	var ref = APIServices.getFirebaseRef(),
 		conferencesRef = APIServices.getConferencesRef();
 
-	ref.onAuth(function() {
+	var authRef = APIServices.getAuthRef();
+	authRef.onAuthStateChanged(function(user) {
 		var adminsRef = conferencesRef.child(conference_uid).child('admins');
 
 		adminsRef.once('value', function(snapshot) {

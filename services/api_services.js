@@ -13,7 +13,7 @@ function APIServices($q, $http) {
 	var ref = firebase.database().ref(),
 		conferencesRef = ref.child('conferences'),
 		storageRef = firebase.storage().ref(),
-		authRef = firebase.auth().ref(),
+		authRef = firebase.auth(),
 		tz_api_key = "AIzaSyCh4eAVGTJRsv-dDKatS2acYi-P1N8tjpU",
 		geocode_api_key = "AIzaSyCDbBLHTSIKqafSpdM-tp_cUYEPtyJ68kM";
 

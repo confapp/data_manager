@@ -46,17 +46,9 @@ function UserManagementService($q, $rootScope, $cookies, $firebaseArray, $fireba
 	function changeEmail(fromEmail, toEmail, password, uid) {
 		return $q(function(resolve, reject) {
 			var authRef = APIServices.getAuthRef();
-			ref.changeEmail({
-				oldEmail : fromEmail,
-				newEmail : toEmail,
-				password : password
-			}, function(error) {
-				if(error) {
-					reject(error);
-				} else {
-					resolve(toEmail);
-				}
-			})
+			if(authRef.currentUser.email === fromEmail) {
+				return authRef.updateEmail(toEmail);
+			}
 		}).then(function() {
 			return new $q(function(resolve, reject) {
 				ref.child('admin_users').child(uid).update({

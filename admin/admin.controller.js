@@ -2,10 +2,10 @@ app.controller('AdminController', AdminController);
 
 AdminController.$inject = ['$scope', '$location', '$rootScope', 'AuthenticationService', 'APIServices', '$firebaseObject', 'DatabaseCreator'];
 function AdminController($scope, $location, $rootScope, AuthenticationService, APIServices, $firebaseObject, DatabaseCreator) {
-	var ref = APIServices.getFirebaseRef();
+	var ref = APIServices.getAuthRef();
 	$scope.isRootUser = false;
 
-	ref.onAuth(function(adata) {
+	ref.onAuthStateChanged(function(adata) {
 		if(adata) {
 			var userInformation = AuthenticationService.getUserInformation(),
 				authInformation = AuthenticationService.getAuthInformation();

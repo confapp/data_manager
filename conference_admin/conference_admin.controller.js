@@ -5,9 +5,9 @@ function HomeController($q, $http, $scope, $location, $rootScope, $uibModal, Aut
 	var ref = APIServices.getFirebaseRef();
 	var conferenceID = $location.search().conference;
 	var conferenceRef = APIServices.getConferencesRef().child(conferenceID);
-	var firebaseRef = APIServices.getFirebaseRef();
 
-	ref.onAuth(function() {
+	var authRef = APIServices.getAuthRef();
+	authRef.onAuthStateChanged(function() {
 		$scope.conference = $firebaseObject(conferenceRef);
 		$scope.conference.$bindTo($scope, 'conference');
 
@@ -31,6 +31,20 @@ function HomeController($q, $http, $scope, $location, $rootScope, $uibModal, Aut
 			conferenceRef.child('locations').on('value', updateMapLocations);
 			updateMapLocations();
 		})
+
+		$scope.conference.$loaded().then(function(data) {
+			setTimeout(function() {
+				$scope.$watch('conference.location', function(newValue) {
+					$scope.timeZoneError = false;
+					APIServices.getLocationTimeZone(newValue).then(function(timeZone) {
+						$scope.timeZoneError = false;
+						$scope.conference.timeZone = timeZone;
+					}, function(err) {
+						$scope.timeZoneError = err.toString();
+					});
+				});
+			}, 100);
+		});
 	});
 
 	$scope.logout = function() {
@@ -183,7 +197,7 @@ function HomeController($q, $http, $scope, $location, $rootScope, $uibModal, Aut
 
 	$scope.removeDataFile = function(file, key) {
 		conferenceRef.child('dataFiles').child(key).remove();
-		UploadService.removeDataFile(file.name, conferenceID);
+		return UploadService.removeFile(file.name, 'data', conferenceID);
 	};
 
 	$scope.updateIcon = function(file) {
@@ -282,21 +296,6 @@ function HomeController($q, $http, $scope, $location, $rootScope, $uibModal, Aut
 			});
 		});
 	}
-
-
-	$scope.conference.$loaded(function(data) {
-		setTimeout(function() {
-			$scope.$watch('conference.location', function(newValue) {
-				$scope.timeZoneError = false;
-				APIServices.getLocationTimeZone(newValue).then(function(timeZone) {
-					$scope.timeZoneError = false;
-					$scope.conference.timeZone = timeZone;
-				}, function(err) {
-					$scope.timeZoneError = err.toString();
-				});
-			});
-		}, 100);
-	});
 
 	$scope.mouseEnterLocation = function(location, key) {
 		$scope.hoveringOverLocation = key;
@@ -422,7 +421,7 @@ function HomeController($q, $http, $scope, $location, $rootScope, $uibModal, Aut
 			gim[gim.length-1] += 'done';
 			$scope.generatingInterimMessages.push('uploading json database...');
 			//conferenceRef.child('currentJSONDatabase').set(jsonData);
-			var deployedDatabase = firebaseRef.child('deployed_databases').child(conferenceID);
+			var deployedDatabase = ref.child('deployed_databases').child(conferenceID);
 			deployedDatabase.update({
 				currentDatabaseVersion: result.version,
 				currentDatabaseUpdated: result.updated,
@@ -430,7 +429,7 @@ function HomeController($q, $http, $scope, $location, $rootScope, $uibModal, Aut
 				database: result.json
 			})
 
-			firebaseRef.child('common_apps').child('main').child(conferenceID).update(result.dbInfo);
+			ref.child('common_apps').child('main').child(conferenceID).update(result.dbInfo);
 
 			return result;
 

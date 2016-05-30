@@ -8,7 +8,8 @@ function UploadService($q, $http, AuthenticationService, Upload, APIServices) {
 			var folderRef = storageRef.child(conferenceID).child(folder);
 			if (files && files.length) {
 				return $q.all(_.map(files, function(file) {
-					var uploadTask = storageRef.child(file.name).put(file);
+					var filename = file.name;
+					var uploadTask = folderRef.child(filename).put(file);
 
 					// Register three observers:
 					// 1. 'state_changed' observer, called any time the state changes
@@ -25,7 +26,10 @@ function UploadService($q, $http, AuthenticationService, Upload, APIServices) {
 							// Handle successful uploads on complete
 							// For instance, get the download URL: https://firebasestorage.googleapis.com/...
 							var downloadURL = uploadTask.snapshot.downloadURL;
-							resolve(downloadURL);
+							resolve({
+								name: filename,
+								uri: downloadURL
+							});
 						});
 					});
 				}));
@@ -36,7 +40,7 @@ function UploadService($q, $http, AuthenticationService, Upload, APIServices) {
 			}
 		},
 
-		removeDataFile: function(file, folder, conferenceID) {
+		removeFile: function(file, folder, conferenceID) {
 			var fileRef = storageRef.child(conferenceID).child(folder).child(file);
 
 			return $q(function(resolve, reject) {

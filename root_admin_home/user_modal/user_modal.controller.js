@@ -6,7 +6,8 @@ function UserModalController($scope, $firebaseArray, $q, user, UserManagementSer
 	var ref = APIServices.getFirebaseRef();
 	var conferencesRef = APIServices.getConferencesRef();
 
-	ref.onAuth(function() {
+	var authRef = APIServices.getAuthRef();
+	authRef.onAuthStateChanged(function(user) {
 		$scope.user = user;
 
 		$scope.userConferences = {};
