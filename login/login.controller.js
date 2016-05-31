@@ -17,12 +17,12 @@ function LoginController($scope, $location, AuthenticationService, UserManagemen
 										$location.path('/choose_conference')
 									}
 								}, function(error) {
-									if(error && error.code === 'INVALID_PASSWORD') {
+									if(error && error.code === 'auth/wrong-password') {
 										$scope.loginError = 'Incorrect password';
-									} else if(error && error.code === 'INVALID_USER') {
+									} else if(error && error.code === 'auth/user-not-found') {
 								        $scope.loginError = "The specified user account does not exist.";
 									} else {
-										$scope.loginError = error;
+										$scope.loginError = error.message;
 									}
 								}).then(function() {
 									$scope.dataLoading = false;
@@ -38,7 +38,7 @@ function LoginController($scope, $location, AuthenticationService, UserManagemen
 			$scope.loginInfo = 'Sent a password reset request for ' + email + '. Please check your inbox.'
 		}, function(error) {
 		    switch (error.code) {
-		      case "INVALID_USER":
+		      case "auth/user-not-found":
 		        $scope.loginError = "The specified user account does not exist.";
 		        break;
 		      default:

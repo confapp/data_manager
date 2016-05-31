@@ -7,13 +7,12 @@ function AdminController($scope, $location, $rootScope, AuthenticationService, A
 
 	ref.onAuthStateChanged(function(adata) {
 		if(adata) {
-			var userInformation = AuthenticationService.getUserInformation(),
-				authInformation = AuthenticationService.getAuthInformation();
-
-			$scope.user_email = userInformation ? userInformation.email : false;
+			$scope.user_email = adata.email;
 			AuthenticationService.isRootUser().then(function(isRoot) {
-				if(isRoot) { $scope.isRootUser = isRoot; }
+				 $scope.isRootUser = isRoot;
 			});
+		} else {
+			$scope.user_email = false;
 		}
 	});
 

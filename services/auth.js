@@ -7,18 +7,20 @@ function AuthenticationService($q, $rootScope, $cookies, APIServices) {
 			var auth = APIServices.getAuthRef();
 			return $q(function(resolve, reject) {
 				auth.signInWithEmailAndPassword(email, password).then(resolve, reject);
+				/*
 			}).then(function(authData) {
 				var userInfo = {
 					email: email
 				};
 
-				setAuthData(authData, userInfo);
+				//setAuthData(authData, userInfo);
 				return userInfo;
+				*/
 			});
 		},
 		isLoggedIn: function() {
 			var auth = APIServices.getAuthRef();
-			
+
 			var deferred = $q.defer();
 			deferred.resolve(auth.currentUser);
 			return deferred.promise;
@@ -44,19 +46,21 @@ function AuthenticationService($q, $rootScope, $cookies, APIServices) {
 		},
 		logout: function() {
 			var auth = APIServices.getAuthRef();
-			clearAuthData();
+			//clearAuthData();
 			return $q(function(resolve, reject) {
-				auth.signOut(resolve, reject);
+				auth.signOut().then(resolve, reject);
 			});
 		},
 		isRootUser: function() {
 			return $q(function(resolve, reject) {
+				var auth = APIServices.getAuthRef();
 				var ref = APIServices.getFirebaseRef();
-				var userInformation = getUserInformation(),
-					authInformation = getAuthInformation();
+
+				//var userInformation = getUserInformation(),
+					//authInformation = getAuthInformation();
 				try {
-					if(authInformation) {
-						ref.child('root_admins').child(authInformation.uid).once('value', function(da) {
+					if(auth.currentUser) {
+						ref.child('root_admins').child(auth.currentUser.uid).once('value', function(da) {
 							if(da.val()) {
 								resolve(true);
 							} else {
@@ -73,10 +77,11 @@ function AuthenticationService($q, $rootScope, $cookies, APIServices) {
 				}
 			});
 		},
-		getUserInformation: getUserInformation,
-		getAuthInformation: getAuthInformation,
-		cacheChangedEmail: cacheChangedEmail
+		//getUserInformation: getUserInformation,
+		//getAuthInformation: getAuthInformation,
+		//cacheChangedEmail: cacheChangedEmail
 	};
+	/*
 
 	function getUserInformation() {
 		return $rootScope.currentUserInfo || $cookies.getObject('currentUserInfo');
@@ -111,6 +116,7 @@ function AuthenticationService($q, $rootScope, $cookies, APIServices) {
 		$rootScope.currentUserInfo.email = toEmail;
 		$cookies.putObject('currentUserInfo', $rootScope.currentUserInfo);
 	}
+	*/
 
 	return service;
 }

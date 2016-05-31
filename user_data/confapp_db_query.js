@@ -766,8 +766,8 @@
 			return database;
 		},
 		loadFirebaseDatabase: function(conference_id, callback, thisArg) {
-			var database = new ConfAppDB({}),
-				ref = new Firebase('https://confapp-data-sync.firebaseio.com/'),
+			var ref = firebase.database().ref(),
+				database = new ConfAppDB({}),
 				conferenceRef = ref.child('deployed_databases').child(conference_id);
 
 			function doGetCurrentJSONDB(dbVersion) {

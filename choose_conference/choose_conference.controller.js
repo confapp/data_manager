@@ -4,8 +4,7 @@ ChooseConferenceController.$inject = ['$scope', '$location', '$rootScope', 'Auth
 function ChooseConferenceController($scope, $location, $rootScope, AuthenticationService, $firebaseObject, APIServices, $filter) {
 	var ref = APIServices.getFirebaseRef();
 	var authRef = APIServices.getAuthRef();
-	authRef.onAuthStateChanged(function() {
-		var authInfo = AuthenticationService.getAuthInformation();
+	authRef.onAuthStateChanged(function(authInfo) {
 		if(authInfo) {
 			var myConferencesRef = ref.child('admin_users').child(authInfo.uid).child('conferences');
 			AuthenticationService.isRootUser().then(function(isRoot) {

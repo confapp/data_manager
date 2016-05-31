@@ -47,7 +47,7 @@ function UserManagementService($q, $rootScope, $cookies, $firebaseArray, $fireba
 		return $q(function(resolve, reject) {
 			var authRef = APIServices.getAuthRef();
 			if(authRef.currentUser.email === fromEmail) {
-				return authRef.updateEmail(toEmail);
+				authRef.updateEmail(toEmail).then(resolve, reject);
 			}
 		}).then(function() {
 			return new $q(function(resolve, reject) {
@@ -58,7 +58,7 @@ function UserManagementService($q, $rootScope, $cookies, $firebaseArray, $fireba
 						if(err) {
 							reject(err);
 						} else {
-							AuthenticationService.cacheChangedEmail(toEmail);
+							//AuthenticationService.cacheChangedEmail(toEmail);
 							resolve(toEmail);
 						}
 					}
@@ -103,17 +103,11 @@ function UserManagementService($q, $rootScope, $cookies, $firebaseArray, $fireba
 	function changePassword(email, old_password, new_password) {
 		return $q(function(resolve, reject) {
 			var authRef = APIServices.getAuthRef();
-			ref.changePassword({
-				email: email,
-				oldPassword: old_password,
-				newPassword: new_password
-			}, function(error) {
-				if(error) {
-					reject(error);
-				} else {
-					resolve();
-				}
-			});
+			if(authRef.currentUser) {
+				authRef.currentUser.updatePassword(new_password).then(resolve, reject);
+			} else {
+				reject('Not logged in');
+			}
 		});
 	}
 	return service;

@@ -23,29 +23,50 @@ function config($routeProvider, $locationProvider) {
 	}).otherwise({ redirectTo: '/login' });
 }
 
-run.$inject = ['$rootScope', '$location', 'AuthenticationService', 'editableOptions'];
-function run($rootScope, $location, AuthenticationService, editableOptions) {
+run.$inject = ['$rootScope', '$location', 'AuthenticationService', 'editableOptions', 'APIServices'];
+function run($rootScope, $location, AuthenticationService, editableOptions, APIServices) {
 	editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+
+	var path = $location.path();
+	var authRef = APIServices.getAuthRef();
+
+	authRef.onAuthStateChanged(function(adata) {
+		if(adata) {
+			if(path.indexOf('/login') >= 0) {
+				$location.path('/');
+			} else {
+				$location.path(path);
+			}
+		} else {
+			$location.path('/login');
+		}
+	});
+
 	$rootScope.$on('$locationChangeStart', function (event, next, current) {
 	// redirect to login page if not logged in and trying to access a restricted page
-		var restrictedPage = $.inArray($location.path(), ['/login']) < 0;
+		//var restrictedPage = $.inArray($location.path(), ['/login']) < 0;
 
-		if(restrictedPage) {
-			AuthenticationService.isLoggedIn().then(function(userInfo) {
-				if(userInfo) {
-					if($.inArray($location.path(), ['/manage_account', '/root_admin']) < 0) {
-						var conference = $location.search().conference;
-						if(conference) {
-							$location.path('/');
-						} else {
-							$location.path('/choose_conference');
-						}
+		//if(restrictedPage) {
+		path = $location.path();
+
+		AuthenticationService.isLoggedIn().then(function(userInfo) {
+			if(userInfo) {
+				if($.inArray(path, ['/manage_account', '/root_admin']) < 0) {
+					var conference = $location.search().conference;
+					if(conference) {
+						$location.path('/');
+					} else {
+						$location.path('/choose_conference');
 					}
-				} else {
-					$location.path('/login');
 				}
-			});
-		}
+			} else {
+				$location.path('/login');
+			}
+		}, function(err) {
+			console.error(err);
+		});
+
+		//}
 	});
 }
 
