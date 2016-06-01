@@ -14,12 +14,14 @@
                 </label>
                 <input class="form-control" type="text" id='new_email_repeat' placeholder='Repeat E-mail' ng-model='change_email.new_repeat' required />
             </div>
+            <!--
             <div class='form-group'>
                 <label for='new_email_pass'>
                     Current Password
                 </label>
                 <input id='new_email_pass' class="form-control" type='password' placeholder='Password' ng-model='change_email.pass' required />
             </div>
+        -->
             <button ng-disabled='change_email.$invalid' class='btn btn-default' type='submit' ng-click='changeEmail(change_email.new_email, change_email.new_repeat, change_email.pass)'>Change E-mail Address</button>
         </form>
         <div ng-if="changeEmailError" class="alert alert-danger" role="alert">{{changeEmailError}}</div>
@@ -28,12 +30,14 @@
     <div class='col-md-6'>
         <h3>Change Password</h3>
         <form name='change_pass'>
+            <!--
             <div class='form-group'>
                 <label for='change_pass_current'>
                     Current Password
                 </label>
                 <input id='change_pass_current' class='form-control' type='password' placeholder='Current Password' ng-model='change_pass.current' required />
             </div>
+            -->
             <div class='form-group'>
                 <label for='change_pass_new'>
                     New Password
@@ -46,7 +50,7 @@
                 </label>
                 <input id='change_pass_repeat' class='form-control' type='password' placeholder='Repeat Password' ng-model='change_pass.new_repeat' required />
             </div>
-            <button ng-disabled='change_pass.$invalid' class='btn btn-default' ng-click='changePassword(change_pass.current, change_pass.new_pass, change_pass.new_repeat)' type='submit'>Change Password</button>
+            <button ng-disabled='change_pass.$invalid' class='btn btn-default' ng-click='changePassword(change_pass.new_pass, change_pass.new_repeat)' type='submit'>Change Password</button>
         </form>
         <div ng-if="changePasswordError" class="alert alert-danger" role="alert">{{changePasswordError}}</div>
         <div ng-if="changePasswordInfo" class="alert alert-info" role="alert">{{changePasswordInfo}}</div>

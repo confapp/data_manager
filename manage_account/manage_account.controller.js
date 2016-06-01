@@ -4,12 +4,14 @@ ManageAccountController.$inject = ['$scope', '$q', 'APIServices', 'UserManagemen
 
 function ManageAccountController($scope, $q, APIServices, UserManagementService, AuthenticationService) {
 	var ref = APIServices.getFirebaseRef();
+	var authRef = APIServices.getAuthRef();
 
-	$scope.changeEmail = function(newEmail, newEmailRepeat, password) {
-		var authInfo = AuthenticationService.getAuthInformation();
+	$scope.changeEmail = function(newEmail, newEmailRepeat) {
+		var currentUser = authRef.currentUser;
+		//var authInfo = AuthenticationService.getAuthInformation();
 		$scope.changeEmailError = $scope.changeEmailInfo = false;
 		if(newEmail === newEmailRepeat) {
-			return UserManagementService.changeEmail($scope.user_email, newEmail, password, authInfo.uid)
+			return UserManagementService.changeEmail($scope.user_email, newEmail, currentUser.uid)
 						.then(function(newEmail) {
 							$scope.changeEmailInfo = 'Address change request was successfully submitted. Please check your "' + newEmail + '" inbox for a confirmation request';
 						}, function(error) {
@@ -29,10 +31,10 @@ function ManageAccountController($scope, $q, APIServices, UserManagementService,
 		}
 	};
 
-	$scope.changePassword = function(fromPassword, newPassword, newPasswordRepeat) {
+	$scope.changePassword = function(newPassword, newPasswordRepeat) {
 		$scope.changePasswordError = $scope.changePasswordInfo = false;
 		if(newPassword === newPasswordRepeat) {
-			return UserManagementService.changePassword($scope.user_email, fromPassword, newPassword)
+			return UserManagementService.changePassword($scope.user_email, newPassword)
 						.then(function() {
 							$scope.changePasswordInfo = 'Password successfully changed.';
 						}, function(error) {
@@ -58,8 +60,9 @@ function ManageAccountController($scope, $q, APIServices, UserManagementService,
 			var desiredResponse = 'Yes, I want to delete my account.';
 			var promptResponse = prompt('Are you sure you want to permanently delete your account? This cannot be undone.\n\nTo delete your account, please type "'+desiredResponse+'"');
 			if(promptResponse === desiredResponse) {
-				var authInfo = AuthenticationService.getAuthInformation();
-				UserManagementService.removeUser($scope.user_email, password, authInfo.uid).then(function() {
+				//var authInfo = AuthenticationService.getAuthInformation();
+				var currentUser = authRef.currentUser;
+				UserManagementService.removeUser($scope.user_email, password, currentUser.uid).then(function() {
 					$scope.logout();
 				}, function(error) {
 					switch (error.code) {

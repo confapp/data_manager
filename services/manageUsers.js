@@ -43,14 +43,15 @@ function UserManagementService($q, $rootScope, $cookies, $firebaseArray, $fireba
 			authRef.sendPasswordResetEmail(email).then(resolve, reject);
 		});
 	}
-	function changeEmail(fromEmail, toEmail, password, uid) {
+	function changeEmail(fromEmail, toEmail, uid) {
 		return $q(function(resolve, reject) {
 			var authRef = APIServices.getAuthRef();
 			if(authRef.currentUser.email === fromEmail) {
-				authRef.updateEmail(toEmail).then(resolve, reject);
+				authRef.currentUser.updateEmail(toEmail).then(resolve, reject);
 			}
 		}).then(function() {
 			return new $q(function(resolve, reject) {
+				var ref = APIServices.getFirebaseRef();
 				ref.child('admin_users').child(uid).update({
 					email: toEmail
 				},
@@ -68,39 +69,26 @@ function UserManagementService($q, $rootScope, $cookies, $firebaseArray, $fireba
 	};
 
 	function removeUser(email, password, uid) {
-		var authRef = APIServices.getAuthRef();
-		return authRef.$authWithPassword({
-			email    : email,
-			password : password
-		}).then(function() {
-			return new $q(function(resolve, reject) {
-				ref.child('admin_users').child(uid).remove(
-					function(err) {
-						if(err) {
-							reject(err);
-						} else {
-							resolve();
-						}
-					}
-				);
-			});
-		}).then(function() {
-			return $q(function(resolve, reject) {
-				ref.removeUser({
-					email : email,
-					password : password
-				}, function(error) {
-					if(error) {
-						reject(error);
+		return new $q(function(resolve, reject) {
+			var ref = APIServices.getFirebaseRef();
+			ref.child('admin_users').child(uid).remove(
+				function(err) {
+					if(err) {
+						reject(err);
 					} else {
 						resolve();
 					}
-				});
+				}
+			);
+		}).then(function() {
+			return $q(function(resolve, reject) {
+				var authRef = APIServices.getAuthRef();
+				authRef.currentUser.delete().then(resolve, reject);
 			});
 		});
 	};
 
-	function changePassword(email, old_password, new_password) {
+	function changePassword(email, new_password) {
 		return $q(function(resolve, reject) {
 			var authRef = APIServices.getAuthRef();
 			if(authRef.currentUser) {

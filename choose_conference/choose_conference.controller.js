@@ -13,7 +13,7 @@ function ChooseConferenceController($scope, $location, $rootScope, Authenticatio
 				if(isRoot) {
 					$scope.myConferences = $firebaseObject(conferencesRef);
 				} else {
-					var authInfo = AuthenticationService.getAuthInformation();
+					//var authInfo = AuthenticationService.getAuthInformation();
 					var conferences = $firebaseObject(ref.child('admin_users').child(authInfo.uid).child('conferences'));
 
 					$scope.myConferences = {};
