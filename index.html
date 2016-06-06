@@ -71,8 +71,8 @@
 		<script type='text/javascript' src='db_creator/json/json_papers_reader.js'></script>
 
 		<script type='text/javascript' src='services/google_sheets.js'></script>
-		<script type='text/javascript' src='https://apis.google.com/js/client.js?onload=checkAuth'></script>
-		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<script type='text/javascript' src='https://apis.google.com/js/platform.js' async defer></script>
+		<script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
 
 		<title>ConfApp Admin</title>
 	</head>
@@ -95,13 +95,5 @@
 				&copy; 2016 Electronic Conference Services, LLC
 			</div>
 		</div>
-		<div id="authorize-div" style="display: none">
-      <span>Authorize access to Google Sheets API</span>
-      <!--Button for the user to click to initiate auth sequence -->
-      <button id="authorize-button" onclick="handleAuthClick(event)">
-        Authorize
-      </button>
-    </div>
-    <pre id="output"></pre>
 	</body>
 </html>
