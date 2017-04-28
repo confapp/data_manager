@@ -21,18 +21,19 @@ app.factory('ParseJSONPapers', [
 					}
 
 					authors = _.map(submission_authors, function(author_info) {
+						var institution_info = author_info.primary;
 						var institution = get_or_put_institution({
-								department: author_info.dept,
-								institution: author_info.institution,
-								city: author_info.city,
-								state: author_info.location,
-								country: author_info.country
+								department: institution_info.dept,
+								institution: institution_info.institution,
+								city: institution_info.city,
+								state: institution_info.location,
+								country: institution_info.country
 							}),
 							split_name = author_info.name.split(" "),
-							last_name = split_name[split_name.length-1],
-							first_name = split_name[0],
+							last_name = author_info.familyName, //split_name[split_name.length-1],
+							first_name = author_info.givenName, //split_name[0],
 							person = get_or_put_person({
-								id: author_info.id || author_info.name,
+								id: author_info.authorId || author_info.name || author_info.id,
 								name: author_info.name,
 								institutions: [institution],
 								given: first_name,
