@@ -486,6 +486,7 @@ function HomeController($q, $http, $scope, $location, $rootScope, $uibModal, Aut
 
 			$scope.warnings = result.warnings;
 		}, function(err) {
+			console.log(err);
 			$scope.error = err;
 		}).finally(function() {
 			$scope.generatingInterimMessages = [];

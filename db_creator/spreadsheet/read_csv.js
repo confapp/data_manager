@@ -13,7 +13,7 @@ function CSVReader($q, CSVHeaders, DetermineCSVType, ParseCSVAttachments, ParseC
 							resolve(results);
 						},
 						error: function(err) {
-							reject(new Error(err));
+							reject(err);
 						}
 					});
 			}).then(function(parsedResult) {
@@ -45,13 +45,21 @@ function CSVReader($q, CSVHeaders, DetermineCSVType, ParseCSVAttachments, ParseC
 							return ParseCSVAttachments.parseCSVAttachments(options, parsedValue.data, parsedValue.filename);
 						} else {
 							throw new Error('Unknown CSV type ' + parsedValue.category);
+							// return false;
 						}
 					}
 				});
 
 				parsePromises.push.apply(parsePromises, categoryPromises);
 			});
-			//return $q.all(parsePromises);
+
+			_.each(parsedValues, function(parsedValue) {
+				if(parsedValue.filetype === 'csv' && parsedValue.error) {
+					var filename = parsedValue.filename;
+					options.warnings.add(filename, 'Could not parse CSV file ' + filename + '. Ignoring. (' + e + ')')
+				}
+			});
+
 			return parsedValues;
 		}
 	};

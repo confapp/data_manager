@@ -9,7 +9,8 @@ function UploadService($q, $http, AuthenticationService, Upload, APIServices) {
 			if (files && files.length) {
 				return $q.all(_.map(files, function(file) {
 					var filename = file.name;
-					var uploadTask = folderRef.child(filename).put(file);
+					var fileRef = folderRef.child(filename);
+					var uploadTask = fileRef.put(file);
 
 					// Register three observers:
 					// 1. 'state_changed' observer, called any time the state changes
